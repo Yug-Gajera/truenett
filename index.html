@@ -32,9 +32,15 @@
           },
           colors: {
             ink: {
-              950: '#0a0f1e',
-              900: '#0f1729',
-              800: '#1a2338',
+              950: '#09090b',
+              900: '#18181b',
+              700: '#3f3f46',
+              500: '#71717a',
+              400: '#a1a1aa',
+              300: '#d4d4d8',
+              200: '#e4e4e7',
+              100: '#f4f4f5',
+              50:  '#fafafa',
             },
             brand: {
               50:  '#ecfdf5',
@@ -45,6 +51,9 @@
               700: '#047857',
             },
           },
+          letterSpacing: {
+            'tightest': '-0.035em',
+          },
         },
       },
     };
@@ -53,46 +62,79 @@
   <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-    /* Soft grid backdrop for a technical, trustworthy feel */
-    .grid-bg {
-      background-image:
-        linear-gradient(to right, rgba(148,163,184,0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(148,163,184,0.08) 1px, transparent 1px);
-      background-size: 44px 44px;
+    body {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: 'cv11', 'ss01';
     }
-    .fade-mask {
-      -webkit-mask-image: radial-gradient(120% 80% at 50% 0%, #000 40%, transparent 100%);
-              mask-image: radial-gradient(120% 80% at 50% 0%, #000 40%, transparent 100%);
+
+    /* Financial figures: tabular numbers so columns align to the pixel */
+    .tnum { font-feature-settings: 'tnum', 'cv11'; font-variant-numeric: tabular-nums; }
+
+    /* ---- Background: faint dotted grid, fading out radially ---- */
+    .dot-grid {
+      background-image: radial-gradient(circle, rgba(9, 9, 11, 0.13) 1px, transparent 1px);
+      background-size: 22px 22px;
+      -webkit-mask-image: radial-gradient(90% 70% at 50% 30%, #000 30%, transparent 100%);
+              mask-image: radial-gradient(90% 70% at 50% 30%, #000 30%, transparent 100%);
     }
+
+    /* ---- Scroll reveal: fade + slide up, staggered via --d ---- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition:
+        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s),
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ---- Converging payment paths (hero) ---- */
+    .flow-line { stroke: #e4e4e7; stroke-width: 1; fill: none; }
+    .flow-pulse {
+      stroke: #10b981; stroke-width: 1.5; fill: none;
+      stroke-dasharray: 3 220;
+      stroke-linecap: round;
+      animation: flow 3.2s linear infinite;
+      opacity: 0.7;
+    }
+    .flow-pulse.d2 { animation-delay: 1.1s; }
+    .flow-pulse.d3 { animation-delay: 2.2s; }
+    @keyframes flow { to { stroke-dashoffset: -223; } }
+
     [x-modal] { transition: opacity .18s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .flow-pulse { animation: none; opacity: 0; }
+    }
   </style>
 </head>
 
 <body class="bg-white font-sans text-ink-900 antialiased">
 
   <!-- ============ NAV ============ -->
-  <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
-    <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+  <header class="sticky top-0 z-40 border-b border-ink-200/60 bg-white/85 backdrop-blur-md">
+    <nav class="mx-auto flex h-16 max-w-5xl items-center justify-between px-6 lg:px-8">
       <a href="#top" class="flex items-center gap-2.5">
-        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-ink-950">
-          <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px">
+        <span class="flex h-7 w-7 items-center justify-center rounded-md bg-ink-950">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px">
             <path d="M4 16 L10 10 L14 13 L20 6" />
             <path d="M15 6 H20 V11" />
           </svg>
         </span>
-        <span class="text-[17px] font-bold tracking-tight text-ink-950">Truenett</span>
+        <span class="text-[15px] font-semibold tracking-tight text-ink-950">Truenett</span>
       </a>
-      <div class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-        <a href="#problem" class="transition hover:text-ink-950">The problem</a>
-        <a href="#how" class="transition hover:text-ink-950">How it works</a>
-        <a href="#pricing" class="transition hover:text-ink-950">Pricing</a>
+      <div class="hidden items-center gap-7 text-sm font-medium text-ink-500 md:flex">
+        <a href="#problem" class="transition-colors hover:text-ink-950">The problem</a>
+        <a href="#how" class="transition-colors hover:text-ink-950">How it works</a>
+        <a href="#pricing" class="transition-colors hover:text-ink-950">Pricing</a>
       </div>
       <button data-open-modal data-cta-location="nav"
-        class="rounded-lg bg-ink-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-ink-800 focus:outline-none focus:ring-2 focus:ring-ink-900 focus:ring-offset-2">
+        class="rounded-lg bg-ink-950 px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-950 focus-visible:ring-offset-2">
         Get early access
       </button>
     </nav>
@@ -101,87 +143,147 @@
   <main id="top">
 
     <!-- ============ HERO ============ -->
-    <section class="relative overflow-hidden bg-ink-950 text-white">
-      <div class="grid-bg fade-mask absolute inset-0 opacity-70"></div>
-      <div class="absolute -top-24 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-brand-500/20 blur-[100px]"></div>
+    <section class="relative overflow-hidden">
+      <div class="dot-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
 
-      <div class="relative mx-auto max-w-6xl px-5 pt-20 pb-24 sm:px-8 sm:pt-28 sm:pb-32">
+      <div class="relative mx-auto max-w-5xl px-6 pb-24 pt-24 sm:pt-32 lg:px-8">
         <div class="mx-auto max-w-3xl text-center">
-          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-200">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-400"></span>
+          <p class="reveal inline-flex items-center gap-2 rounded-full border border-ink-200 bg-white px-3 py-1 text-[13px] font-medium text-ink-500">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
             Now onboarding early users
-          </span>
-
-          <h1 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
-            Know your <span class="text-brand-400">real</span> revenue,<br class="hidden sm:block" />
-            across every platform.
-          </h1>
-
-          <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            Fees, refunds, and currency swings quietly reshape your numbers.
-            Truenett reconciles every payout into one clear, trustworthy figure —
-            so the revenue you see is the revenue you actually kept.
           </p>
 
-          <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <h1 class="reveal mt-8 text-[2.75rem] font-semibold leading-[1.05] tracking-tightest text-ink-950 sm:text-6xl md:text-[4.25rem]" style="--d:.05s">
+            Know what you<br />actually earned.
+          </h1>
+
+          <p class="reveal mx-auto mt-6 max-w-md text-[17px] leading-relaxed text-ink-500" style="--d:.1s">
+            Truenett reconciles fees, refunds, and FX from every platform into one number you can trust.
+          </p>
+
+          <div class="reveal mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" style="--d:.15s">
             <button data-open-modal data-cta-location="hero"
-              class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-lg shadow-brand-500/20 transition hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 focus:ring-offset-ink-950 sm:w-auto">
+              class="inline-flex h-12 w-full items-center justify-center rounded-lg bg-ink-950 px-6 text-[15px] font-medium text-white transition-colors hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-950 focus-visible:ring-offset-2 sm:w-auto">
               Get early access
-              <svg class="h-4 w-4 transition group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h9.586l-3.293-3.293a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
             </button>
-            <a href="#how" class="inline-flex w-full items-center justify-center rounded-xl border border-white/15 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/5 sm:w-auto">
+            <a href="#how"
+              class="inline-flex h-12 w-full items-center justify-center rounded-lg border border-ink-200 bg-white px-6 text-[15px] font-medium text-ink-700 transition-colors hover:border-ink-300 hover:text-ink-950 sm:w-auto">
               See how it works
             </a>
           </div>
 
-          <p class="mt-5 text-xs text-slate-400">No credit card required · Your data stays yours</p>
+          <p class="reveal mt-5 text-[13px] text-ink-400" style="--d:.2s">No credit card required · Your data stays yours</p>
+        </div>
+
+        <!-- ==== Hero visual: platforms converge into one reconciled number ==== -->
+        <div class="reveal mx-auto mt-20 max-w-2xl" style="--d:.25s">
+
+          <!-- Platform sources -->
+          <div class="flex items-center justify-center gap-x-5 gap-y-2 px-2 text-[12px] font-medium tracking-wide text-ink-400 sm:gap-x-8 sm:text-[13px]" aria-label="Supported platforms">
+            <span>Stripe</span>
+            <span>Gumroad</span>
+            <span class="hidden sm:inline">Lemon&nbsp;Squeezy</span>
+            <span>PayPal</span>
+            <span class="hidden sm:inline">Paddle</span>
+            <span>AdSense</span>
+          </div>
+
+          <!-- Converging paths -->
+          <svg class="mx-auto -mb-px mt-3 block h-16 w-full max-w-xl" viewBox="0 0 560 64" fill="none" aria-hidden="true" preserveAspectRatio="none">
+            <path class="flow-line" d="M40 0 C40 44, 280 20, 280 64" />
+            <path class="flow-line" d="M136 0 C136 44, 280 20, 280 64" />
+            <path class="flow-line" d="M232 0 C232 44, 280 20, 280 64" />
+            <path class="flow-line" d="M328 0 C328 44, 280 20, 280 64" />
+            <path class="flow-line" d="M424 0 C424 44, 280 20, 280 64" />
+            <path class="flow-line" d="M520 0 C520 44, 280 20, 280 64" />
+            <path class="flow-pulse"    d="M40 0 C40 44, 280 20, 280 64" />
+            <path class="flow-pulse d2" d="M328 0 C328 44, 280 20, 280 64" />
+            <path class="flow-pulse d3" d="M520 0 C520 44, 280 20, 280 64" />
+          </svg>
+
+          <!-- Reconciliation card -->
+          <div class="rounded-xl border border-ink-200 bg-white shadow-[0_1px_2px_rgba(9,9,11,0.04),0_16px_40px_-16px_rgba(9,9,11,0.1)]">
+            <div class="flex items-baseline justify-between border-b border-ink-100 px-6 py-4 sm:px-8">
+              <h2 class="text-sm font-medium text-ink-950">Net revenue</h2>
+              <p class="text-[13px] text-ink-400">June 2026 · 6 platforms · USD</p>
+            </div>
+
+            <div class="px-6 pb-2 pt-6 sm:px-8">
+              <p class="tnum text-4xl font-semibold tracking-tight text-ink-950 sm:text-[2.75rem]">
+                $<span id="net-figure" data-target="41844.61">41,844.61</span>
+              </p>
+              <p class="mt-1.5 text-[13px] font-medium text-brand-600">+12.4% vs May</p>
+            </div>
+
+            <dl class="tnum px-6 pb-6 pt-4 text-sm sm:px-8">
+              <div class="flex items-baseline justify-between py-[9px]">
+                <dt class="text-ink-500">Gross revenue</dt>
+                <dd class="font-medium text-ink-950">$48,210.40</dd>
+              </div>
+              <div class="flex items-baseline justify-between border-t border-ink-100 py-[9px]">
+                <dt class="text-ink-500">Platform fees</dt>
+                <dd class="text-ink-500">−$1,644.83</dd>
+              </div>
+              <div class="flex items-baseline justify-between border-t border-ink-100 py-[9px]">
+                <dt class="text-ink-500">Refunds</dt>
+                <dd class="text-ink-500">−$912.00</dd>
+              </div>
+              <div class="flex items-baseline justify-between border-t border-ink-100 py-[9px]">
+                <dt class="text-ink-500">Chargebacks</dt>
+                <dd class="text-ink-500">−$210.55</dd>
+              </div>
+              <div class="flex items-baseline justify-between border-t border-ink-100 py-[9px]">
+                <dt class="text-ink-500">FX loss</dt>
+                <dd class="text-ink-500">−$186.22</dd>
+              </div>
+              <div class="flex items-baseline justify-between border-t border-ink-100 py-[9px]">
+                <dt class="text-ink-500">Estimated taxes</dt>
+                <dd class="text-ink-500">−$3,412.19</dd>
+              </div>
+              <div class="mt-1 flex items-baseline justify-between border-t border-ink-200 pb-1 pt-3.5">
+                <dt class="flex items-center gap-2 font-medium text-ink-950">
+                  <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+                  Final take-home
+                </dt>
+                <dd class="font-semibold text-ink-950">$41,844.61</dd>
+              </div>
+            </dl>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ============ PROBLEM ============ -->
-    <section id="problem" class="border-b border-slate-100 bg-white py-20 sm:py-24">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="text-sm font-semibold uppercase tracking-wider text-brand-600">The problem</p>
-          <h2 class="mt-3 text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl">
-            Your top-line number is lying to you
+    <section id="problem" class="border-t border-ink-100 py-24 sm:py-32">
+      <div class="mx-auto max-w-5xl px-6 lg:px-8">
+        <div class="reveal max-w-2xl">
+          <p class="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-400">The problem</p>
+          <h2 class="mt-4 text-3xl font-semibold tracking-tightest text-ink-950 sm:text-4xl">
+            Your top-line number is lying to you.
           </h2>
-          <p class="mt-4 text-base leading-relaxed text-slate-600">
+          <p class="mt-4 max-w-lg text-base leading-relaxed text-ink-500">
             Three things stand between what platforms report and what you actually earn.
           </p>
         </div>
 
-        <div class="mt-14 grid gap-6 md:grid-cols-3">
-          <!-- 1 -->
-          <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-7 transition hover:border-slate-300 hover:shadow-sm">
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
-              <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <h3 class="mt-5 text-lg font-semibold text-ink-950">Fees &amp; refunds eat your revenue</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+        <div class="mt-16 grid gap-x-10 gap-y-12 md:grid-cols-3">
+          <div class="reveal border-t border-ink-200 pt-6">
+            <h3 class="text-[15px] font-semibold text-ink-950">Fees and refunds eat your revenue</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-ink-500">
               Processing fees, chargebacks, and refunds are deducted after the sale —
               so the number you celebrated isn't the number that lands.
             </p>
           </div>
-          <!-- 2 -->
-          <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-7 transition hover:border-slate-300 hover:shadow-sm">
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
-              <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="15" width="7" height="5" rx="1.5"/><rect x="14" y="15" width="7" height="5" rx="1.5"/></svg>
-            </div>
-            <h3 class="mt-5 text-lg font-semibold text-ink-950">Income scattered across platforms</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          <div class="reveal border-t border-ink-200 pt-6" style="--d:.08s">
+            <h3 class="text-[15px] font-semibold text-ink-950">Income scattered across platforms</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-ink-500">
               Payouts arrive from a dozen places on a dozen schedules. Stitching them
               together in a spreadsheet is slow, manual, and easy to get wrong.
             </p>
           </div>
-          <!-- 3 -->
-          <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-7 transition hover:border-slate-300 hover:shadow-sm">
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
-              <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>
-            </div>
-            <h3 class="mt-5 text-lg font-semibold text-ink-950">FX changes your numbers after the fact</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          <div class="reveal border-t border-ink-200 pt-6" style="--d:.16s">
+            <h3 class="text-[15px] font-semibold text-ink-950">FX changes your numbers after the fact</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-ink-500">
               Cross-currency payouts settle at rates you didn't set. By the time funds
               convert, your reported total and your bank balance no longer match.
             </p>
@@ -191,132 +293,144 @@
     </section>
 
     <!-- ============ HOW IT WORKS ============ -->
-    <section id="how" class="bg-slate-50 py-20 sm:py-24">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="text-sm font-semibold uppercase tracking-wider text-brand-600">How it works</p>
-          <h2 class="mt-3 text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl">
-            One clear number, in three steps
+    <section id="how" class="border-t border-ink-100 bg-ink-50 py-24 sm:py-32">
+      <div class="mx-auto max-w-5xl px-6 lg:px-8">
+        <div class="reveal max-w-2xl">
+          <p class="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-400">How it works</p>
+          <h2 class="mt-4 text-3xl font-semibold tracking-tightest text-ink-950 sm:text-4xl">
+            One clear number, in three steps.
           </h2>
-          <p class="mt-4 text-base leading-relaxed text-slate-600">
+          <p class="mt-4 max-w-lg text-base leading-relaxed text-ink-500">
             Connect your sources once and let Truenett do the reconciling.
           </p>
         </div>
 
-        <div class="mt-14 grid gap-6 md:grid-cols-3">
-          <!-- Step 1 -->
-          <div class="relative rounded-2xl border border-slate-200 bg-white p-7">
-            <span class="text-sm font-bold text-brand-600">Step 01</span>
-            <h3 class="mt-3 text-lg font-semibold text-ink-950">Connect your platforms</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+        <ol class="mt-16 grid gap-x-10 gap-y-12 md:grid-cols-3">
+          <li class="reveal">
+            <p class="tnum text-[13px] font-medium text-brand-600">01</p>
+            <h3 class="mt-3 text-[15px] font-semibold text-ink-950">Connect your platforms</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-ink-500">
               Link the platforms that pay you. Truenett pulls in every payout,
               fee line, and refund automatically.
             </p>
-          </div>
-          <!-- Step 2 -->
-          <div class="relative rounded-2xl border border-slate-200 bg-white p-7">
-            <span class="text-sm font-bold text-brand-600">Step 02</span>
-            <h3 class="mt-3 text-lg font-semibold text-ink-950">We reconcile the details</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          </li>
+          <li class="reveal" style="--d:.08s">
+            <p class="tnum text-[13px] font-medium text-brand-600">02</p>
+            <h3 class="mt-3 text-[15px] font-semibold text-ink-950">We reconcile the details</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-ink-500">
               Fees, refunds, and FX conversions are matched to each transaction and
               normalized into a single currency you choose.
             </p>
-          </div>
-          <!-- Step 3 -->
-          <div class="relative rounded-2xl border border-slate-200 bg-white p-7">
-            <span class="text-sm font-bold text-brand-600">Step 03</span>
-            <h3 class="mt-3 text-lg font-semibold text-ink-950">See your true revenue</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          </li>
+          <li class="reveal" style="--d:.16s">
+            <p class="tnum text-[13px] font-medium text-brand-600">03</p>
+            <h3 class="mt-3 text-[15px] font-semibold text-ink-950">See your true revenue</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-ink-500">
               Get one reconciled figure of what you actually kept — updated as new
               payouts settle, ready to export whenever you need it.
             </p>
-          </div>
-        </div>
+          </li>
+        </ol>
       </div>
     </section>
 
     <!-- ============ PRICING ============ -->
-    <section id="pricing" class="bg-white py-20 sm:py-24">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="text-sm font-semibold uppercase tracking-wider text-brand-600">Pricing</p>
-          <h2 class="mt-3 text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl">
-            Simple, honest pricing
-          </h2>
-          <p class="mt-4 text-base leading-relaxed text-slate-600">
-            One plan. Everything included. No per-platform surcharges.
-          </p>
-        </div>
+    <section id="pricing" class="border-t border-ink-100 py-24 sm:py-32">
+      <div class="mx-auto max-w-5xl px-6 lg:px-8">
+        <div class="grid items-start gap-14 md:grid-cols-2 md:gap-10">
+          <div class="reveal max-w-md">
+            <p class="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-400">Pricing</p>
+            <h2 class="mt-4 text-3xl font-semibold tracking-tightest text-ink-950 sm:text-4xl">
+              Simple, honest pricing.
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-ink-500">
+              One plan. Everything included. No per-platform surcharges.
+              Early-access pricing is locked in for early users.
+            </p>
+          </div>
 
-        <div class="mx-auto mt-14 max-w-md">
-          <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
-            <div class="absolute inset-x-0 top-0 h-1 bg-brand-500"></div>
-            <div class="p-8 sm:p-10">
+          <div class="reveal w-full max-w-md md:justify-self-end" style="--d:.1s">
+            <div class="rounded-xl border border-ink-200 bg-white p-8 shadow-[0_1px_2px_rgba(9,9,11,0.04),0_16px_40px_-16px_rgba(9,9,11,0.08)]">
               <div class="flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-ink-950">Truenett</h3>
-                <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">Early access</span>
+                <h3 class="text-[15px] font-semibold text-ink-950">Truenett</h3>
+                <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[12px] font-medium text-brand-700">Early access</span>
               </div>
 
-              <div class="mt-6 flex items-end gap-1.5">
-                <span class="text-5xl font-extrabold tracking-tight text-ink-950">$9</span>
-                <span class="mb-1.5 text-base font-medium text-slate-500">/mo</span>
+              <div class="tnum mt-6 flex items-baseline gap-1.5">
+                <span class="text-5xl font-semibold tracking-tight text-ink-950">$9</span>
+                <span class="text-[15px] font-medium text-ink-400">/month</span>
               </div>
-              <p class="mt-2 text-sm text-slate-500">Billed monthly. Cancel anytime.</p>
+              <p class="mt-2 text-[13px] text-ink-400">Billed monthly. Cancel anytime.</p>
 
-              <ul class="mt-8 space-y-3.5 text-sm text-slate-700">
-                <li class="flex items-start gap-3">
-                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+              <ul class="mt-8 space-y-3 border-t border-ink-100 pt-7 text-sm text-ink-700">
+                <li class="flex items-center gap-3">
+                  <svg class="shrink-0 text-brand-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>
                   Connect all your payout platforms
                 </li>
-                <li class="flex items-start gap-3">
-                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                <li class="flex items-center gap-3">
+                  <svg class="shrink-0 text-brand-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>
                   Automatic fee &amp; refund reconciliation
                 </li>
-                <li class="flex items-start gap-3">
-                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                <li class="flex items-center gap-3">
+                  <svg class="shrink-0 text-brand-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>
                   Multi-currency FX normalization
                 </li>
-                <li class="flex items-start gap-3">
-                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                <li class="flex items-center gap-3">
+                  <svg class="shrink-0 text-brand-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>
                   Export your reconciled data anytime
                 </li>
               </ul>
 
               <button data-open-modal data-cta-location="pricing"
-                class="mt-9 inline-flex w-full items-center justify-center rounded-xl bg-ink-950 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-ink-800 focus:outline-none focus:ring-2 focus:ring-ink-900 focus:ring-offset-2">
+                class="mt-8 inline-flex h-11 w-full items-center justify-center rounded-lg bg-ink-950 px-6 text-sm font-medium text-white transition-colors hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-950 focus-visible:ring-offset-2">
                 Get early access
               </button>
-              <p class="mt-3 text-center text-xs text-slate-400">Early-access pricing locked in for early users.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- ============ CLOSING CTA ============ -->
+    <section class="border-t border-ink-100 py-24 sm:py-28">
+      <div class="reveal mx-auto max-w-5xl px-6 text-center lg:px-8">
+        <h2 class="mx-auto max-w-xl text-3xl font-semibold tracking-tightest text-ink-950 sm:text-4xl">
+          Stop guessing what you made.
+        </h2>
+        <p class="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink-500">
+          Join the early-access list and be first to see your real number.
+        </p>
+        <button data-open-modal data-cta-location="closing"
+          class="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-ink-950 px-7 text-[15px] font-medium text-white transition-colors hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-950 focus-visible:ring-offset-2">
+          Get early access
+        </button>
+      </div>
+    </section>
   </main>
 
   <!-- ============ FOOTER ============ -->
-  <footer class="border-t border-slate-200 bg-ink-950 text-slate-300">
-    <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8">
-      <div class="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+  <footer class="border-t border-ink-200/70">
+    <div class="mx-auto max-w-5xl px-6 py-14 lg:px-8">
+      <div class="flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
         <div class="max-w-sm">
           <div class="flex items-center gap-2.5">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M4 16 L10 10 L14 13 L20 6"/><path d="M15 6 H20 V11"/></svg>
+            <span class="flex h-7 w-7 items-center justify-center rounded-md bg-ink-950">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M4 16 L10 10 L14 13 L20 6"/><path d="M15 6 H20 V11"/></svg>
             </span>
-            <span class="text-[17px] font-bold tracking-tight text-white">Truenett</span>
+            <span class="text-[15px] font-semibold tracking-tight text-ink-950">Truenett</span>
           </div>
-          <p class="mt-4 text-sm leading-relaxed text-slate-400">
+          <p class="mt-4 text-sm leading-relaxed text-ink-500">
             Reconciled revenue across every platform. One number you can actually trust.
           </p>
         </div>
         <nav class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-          <a href="#problem" class="text-slate-400 transition hover:text-white">The problem</a>
-          <a href="#how" class="text-slate-400 transition hover:text-white">How it works</a>
-          <a href="#pricing" class="text-slate-400 transition hover:text-white">Pricing</a>
-          <button data-open-modal data-cta-location="footer" class="text-slate-400 transition hover:text-white">Get early access</button>
+          <a href="#problem" class="text-ink-500 transition-colors hover:text-ink-950">The problem</a>
+          <a href="#how" class="text-ink-500 transition-colors hover:text-ink-950">How it works</a>
+          <a href="#pricing" class="text-ink-500 transition-colors hover:text-ink-950">Pricing</a>
+          <button data-open-modal data-cta-location="footer" class="text-ink-500 transition-colors hover:text-ink-950">Get early access</button>
         </nav>
       </div>
-      <div class="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center">
+      <div class="mt-12 flex flex-col items-start justify-between gap-3 border-t border-ink-100 pt-6 text-[13px] text-ink-400 sm:flex-row sm:items-center">
         <p>© <span id="year">2026</span> Truenett. All rights reserved.</p>
         <p>Built for people who want the real number.</p>
       </div>
@@ -325,21 +439,18 @@
 
   <!-- ============ EMAIL-CAPTURE MODAL ============ -->
   <div id="modal" x-modal class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div data-close-modal class="absolute inset-0 bg-ink-950/60 backdrop-blur-sm"></div>
+    <div data-close-modal class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"></div>
 
-    <div class="relative w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl sm:p-8">
+    <div class="relative w-full max-w-sm rounded-xl border border-ink-200 bg-white p-7 shadow-[0_24px_60px_-16px_rgba(9,9,11,0.25)] sm:p-8">
       <button data-close-modal aria-label="Close"
-        class="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
-        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M4.3 4.3a1 1 0 011.4 0L10 8.6l4.3-4.3a1 1 0 111.4 1.4L11.4 10l4.3 4.3a1 1 0 01-1.4 1.4L10 11.4l-4.3 4.3a1 1 0 01-1.4-1.4L8.6 10 4.3 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg>
+        class="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700">
+        <svg viewBox="0 0 20 20" fill="currentColor" style="width:18px;height:18px"><path fill-rule="evenodd" d="M4.3 4.3a1 1 0 011.4 0L10 8.6l4.3-4.3a1 1 0 111.4 1.4L11.4 10l4.3 4.3a1 1 0 01-1.4 1.4L10 11.4l-4.3 4.3a1 1 0 01-1.4-1.4L8.6 10 4.3 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg>
       </button>
 
       <!-- Form state -->
       <div id="modal-form-state">
-        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 ring-1 ring-brand-100">
-          <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
-        </div>
-        <h2 id="modal-title" class="mt-5 text-xl font-bold tracking-tight text-ink-950">Get early access</h2>
-        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+        <h2 id="modal-title" class="text-lg font-semibold tracking-tight text-ink-950">Get early access</h2>
+        <p class="mt-2 text-sm leading-relaxed text-ink-500">
           Drop your email and we'll reach out when your spot opens up. No spam — just your invite.
         </p>
 
@@ -351,28 +462,28 @@
           <div>
             <label for="email" class="sr-only">Email address</label>
             <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com"
-              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-ink-950 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30" />
+              class="h-11 w-full rounded-lg border border-ink-200 bg-white px-3.5 text-sm text-ink-950 placeholder-ink-400 transition-colors focus:border-ink-950 focus:outline-none focus:ring-1 focus:ring-ink-950" />
           </div>
           <p id="email-error" class="hidden text-sm text-red-600" role="alert"></p>
           <button id="email-submit-btn" type="submit"
-            class="inline-flex w-full items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-semibold text-ink-950 shadow-sm transition hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
+            class="inline-flex h-11 w-full items-center justify-center rounded-lg bg-ink-950 px-6 text-sm font-medium text-white transition-colors hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
             Request access
           </button>
         </form>
-        <p class="mt-4 text-center text-xs text-slate-400">We'll only use your email to send your invite.</p>
+        <p class="mt-4 text-center text-[13px] text-ink-400">We'll only use your email to send your invite.</p>
       </div>
 
       <!-- Success state -->
       <div id="modal-success-state" class="hidden text-center">
-        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 ring-1 ring-brand-100">
-          <svg class="h-6 w-6 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:24px;height:24px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+        <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-brand-50">
+          <svg class="text-brand-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>
         </div>
-        <h2 class="mt-5 text-xl font-bold tracking-tight text-ink-950">You're on the list</h2>
-        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+        <h2 class="mt-5 text-lg font-semibold tracking-tight text-ink-950">You're on the list</h2>
+        <p class="mt-2 text-sm leading-relaxed text-ink-500">
           Thanks for your interest in Truenett. We'll email you as soon as your early-access spot is ready.
         </p>
         <button data-close-modal
-          class="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-ink-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-ink-800">
+          class="mt-6 inline-flex h-11 w-full items-center justify-center rounded-lg bg-ink-950 px-6 text-sm font-medium text-white transition-colors hover:bg-ink-700">
           Done
         </button>
       </div>
@@ -382,6 +493,55 @@
   <script>
     // Current year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Scroll reveal =====
+    // Adds .in when an element enters the viewport; CSS handles the rest.
+    // Elements are revealed once and never re-hidden.
+    (() => {
+      const els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(el => el.classList.add('in'));
+        return;
+      }
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+      els.forEach(el => io.observe(el));
+    })();
+
+    // ===== Hero number count-up =====
+    // Counts the net-revenue figure up once when it scrolls into view.
+    // Skipped entirely under prefers-reduced-motion.
+    (() => {
+      const el = document.getElementById('net-figure');
+      if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const target = parseFloat(el.dataset.target);
+      const fmt = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const duration = 1400;
+
+      const run = () => {
+        const start = performance.now();
+        const tick = now => {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 4); // ease-out quart
+          el.textContent = fmt(target * eased);
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+
+      if (!('IntersectionObserver' in window)) return; // static figure is already correct
+      const io = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { run(); io.disconnect(); }
+      }, { threshold: 0.4 });
+      io.observe(el);
+    })();
 
     // ===== UTM attribution =====
     // Captured once on load and reused for every event + form submission,
