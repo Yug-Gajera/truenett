@@ -6,6 +6,10 @@
 .env.*
 !.env.example
 
+# Local client config with API keys (copy config.example.js → config.js).
+# On Vercel it's generated from env vars by scripts/build-config.mjs.
+config.js
+
 # macOS
 .DS_Store
 

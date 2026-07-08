@@ -1,17 +1,24 @@
 # Truenett — landing page
 
-Single-file static marketing page (`index.html`), plain HTML + Tailwind (CDN). No backend, no build step. Deploys to Vercel.
+Static marketing page (`index.html`), plain HTML + Tailwind (CDN). No backend. Deploys to Vercel.
+
+## API keys — never committed
+
+All keys live in **`config.js`**, which is **gitignored**. The repo only contains `config.example.js` (empty template).
+
+- **Local dev:** `cp config.example.js config.js` and fill in your values.
+- **Vercel:** don't create config.js — set env vars in the project settings (**Settings → Environment Variables**): `POSTHOG_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY` (and optionally `POSTHOG_HOST` for EU cloud). The build step (`scripts/build-config.mjs`, wired up in `vercel.json`) generates `config.js` from them at deploy time.
+
+If a key is missing, the page still works — the corresponding feature (analytics / email capture) just stays off.
+
+> Reality check: the PostHog project key and Supabase **anon** key are *publishable* keys — visitors can always see them in the browser, and that's by design. The RLS policy is the actual security boundary. This setup keeps them out of the Git repo, which is what matters. Never put a Supabase **service-role** key (or any secret) in `config.js`.
 
 ## Deploy
 
-Vercel auto-detects this as a static site and serves `index.html` — no build command, output dir, or `vercel.json` needed.
-
 - **CLI:** run `vercel` (preview) or `vercel --prod` (production) from this folder.
-- **Git:** push to GitHub/GitLab and "Import Project" in the Vercel dashboard. Leave the framework preset as **Other** and both build/output settings empty.
+- **Git:** push to GitHub and "Import Project" in the Vercel dashboard. Leave the framework preset as **Other** — `vercel.json` already sets the build command and output directory.
 
-There's nothing to build — Vercel serves `index.html` as-is.
-
-> Note: email capture (Supabase) and analytics (PostHog) are fully independent of the host, so nothing about them changes on Vercel.
+Remember to add the env vars above before the first production deploy.
 
 ---
 
@@ -26,12 +33,9 @@ Dashboard: <https://us.posthog.com> (or <https://eu.posthog.com> for EU cloud).
 **One-time setup (required before anything records):**
 
 1. Sign up at PostHog (free tier: 1M events/mo) and create a project.
-2. Copy the **Project API key** (Project Settings) and paste it into `index.html`, replacing `phc_YOUR_PROJECT_API_KEY`:
-   ```js
-   posthog.init('phc_...', { api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only' });
-   ```
-   If your project is on **EU cloud**, change `api_host` to `https://eu.i.posthog.com`.
-   For a **cookieless** setup, add `persistence: 'memory'` to the init options.
+2. Copy the **Project API key** (Project Settings) and set it as `posthogKey` in `config.js` (local) or as the `POSTHOG_KEY` env var (Vercel).
+   If your project is on **EU cloud**, also set `posthogHost` / `POSTHOG_HOST` to `https://eu.i.posthog.com`.
+   For a **cookieless** setup, add `persistence: 'memory'` to the init options in `index.html`.
 3. No goal registration needed — custom events appear automatically once they fire.
 
 **Where the events show up:** **Activity** (live event stream) shows `cta_click` / `email_submit` immediately. Build charts under **Product Analytics → New insight**.
@@ -42,7 +46,7 @@ Dashboard: <https://us.posthog.com> (or <https://eu.posthog.com> for EU cloud).
 
 | Property        | Meaning                                              |
 | --------------- | ---------------------------------------------------- |
-| `location`      | Which button fired `cta_click`: `nav` / `hero` / `pricing` / `footer` |
+| `location`      | Which button fired `cta_click`: `nav` / `hero` / `pricing` / `closing` / `footer` |
 | `utm_source`    | Traffic source, from the URL's `?utm_source=...`     |
 | `utm_medium`    | e.g. `email`, `cpc`, `social`                        |
 | `utm_campaign`  | Campaign name                                        |
@@ -62,7 +66,7 @@ Each row includes the email plus `utm_*` and `referrer` columns, so every lead c
 
 1. Create a Supabase project.
 2. In **SQL Editor**, run the schema below to create the table + insert policy.
-3. In `index.html`, set `SUPABASE_URL` and `SUPABASE_ANON_KEY` (Project Settings → API). The anon key is meant to be public — inserts are gated by the RLS policy.
+3. Set `supabaseUrl` + `supabaseAnonKey` in `config.js` (local) or the `SUPABASE_URL` + `SUPABASE_ANON_KEY` env vars (Vercel) — values are under Project Settings → API. The anon key is meant to be public — inserts are gated by the RLS policy.
 
 ```sql
 create table public.early_access_signups (
