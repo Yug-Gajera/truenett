@@ -106,3 +106,4 @@ https://YOUR-DOMAIN.com/?utm_source=twitter&utm_medium=social&utm_campaign=launc
 ```
 
 They're captured once on page load and attached to both PostHog events **and** the Supabase signup row, so you can trace which source drove each click and each signup.
+# truenett
