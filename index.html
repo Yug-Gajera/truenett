@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Truenett — See your real revenue, across every platform</title>
+  <meta name="description" content="Truenett reconciles fees, refunds, and FX across all your payout platforms so you always know your true revenue." />
+
+  <!-- ===== PostHog Analytics =====
+       Replace phc_YOUR_PROJECT_API_KEY with your project key (Project Settings).
+       Use https://eu.i.posthog.com as api_host if your project is on EU cloud.
+       For a cookieless setup, add  persistence: 'memory'  to the init options. -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_YOUR_PROJECT_API_KEY', { api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only' });
+  </script>
+
+  <!-- ===== Supabase (email capture) =====
+       Fill in SUPABASE_URL and SUPABASE_ANON_KEY below (Project Settings → API).
+       The anon key is safe to expose client-side; inserts are gated by an
+       RLS policy (see README.md for the SQL to create the table + policy). -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: {
+              950: '#0a0f1e',
+              900: '#0f1729',
+              800: '#1a2338',
+            },
+            brand: {
+              50:  '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    /* Soft grid backdrop for a technical, trustworthy feel */
+    .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(148,163,184,0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148,163,184,0.08) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+    .fade-mask {
+      -webkit-mask-image: radial-gradient(120% 80% at 50% 0%, #000 40%, transparent 100%);
+              mask-image: radial-gradient(120% 80% at 50% 0%, #000 40%, transparent 100%);
+    }
+    [x-modal] { transition: opacity .18s ease; }
+  </style>
+</head>
+
+<body class="bg-white font-sans text-ink-900 antialiased">
+
+  <!-- ============ NAV ============ -->
+  <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+      <a href="#top" class="flex items-center gap-2.5">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-ink-950">
+          <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px">
+            <path d="M4 16 L10 10 L14 13 L20 6" />
+            <path d="M15 6 H20 V11" />
+          </svg>
+        </span>
+        <span class="text-[17px] font-bold tracking-tight text-ink-950">Truenett</span>
+      </a>
+      <div class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+        <a href="#problem" class="transition hover:text-ink-950">The problem</a>
+        <a href="#how" class="transition hover:text-ink-950">How it works</a>
+        <a href="#pricing" class="transition hover:text-ink-950">Pricing</a>
+      </div>
+      <button data-open-modal data-cta-location="nav"
+        class="rounded-lg bg-ink-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-ink-800 focus:outline-none focus:ring-2 focus:ring-ink-900 focus:ring-offset-2">
+        Get early access
+      </button>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="relative overflow-hidden bg-ink-950 text-white">
+      <div class="grid-bg fade-mask absolute inset-0 opacity-70"></div>
+      <div class="absolute -top-24 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-brand-500/20 blur-[100px]"></div>
+
+      <div class="relative mx-auto max-w-6xl px-5 pt-20 pb-24 sm:px-8 sm:pt-28 sm:pb-32">
+        <div class="mx-auto max-w-3xl text-center">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-200">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-400"></span>
+            Now onboarding early users
+          </span>
+
+          <h1 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
+            Know your <span class="text-brand-400">real</span> revenue,<br class="hidden sm:block" />
+            across every platform.
+          </h1>
+
+          <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+            Fees, refunds, and currency swings quietly reshape your numbers.
+            Truenett reconciles every payout into one clear, trustworthy figure —
+            so the revenue you see is the revenue you actually kept.
+          </p>
+
+          <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <button data-open-modal data-cta-location="hero"
+              class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-7 py-3.5 text-base font-semibold text-ink-950 shadow-lg shadow-brand-500/20 transition hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 focus:ring-offset-ink-950 sm:w-auto">
+              Get early access
+              <svg class="h-4 w-4 transition group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h9.586l-3.293-3.293a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+            </button>
+            <a href="#how" class="inline-flex w-full items-center justify-center rounded-xl border border-white/15 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/5 sm:w-auto">
+              See how it works
+            </a>
+          </div>
+
+          <p class="mt-5 text-xs text-slate-400">No credit card required · Your data stays yours</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROBLEM ============ -->
+    <section id="problem" class="border-b border-slate-100 bg-white py-20 sm:py-24">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold uppercase tracking-wider text-brand-600">The problem</p>
+          <h2 class="mt-3 text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl">
+            Your top-line number is lying to you
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Three things stand between what platforms report and what you actually earn.
+          </p>
+        </div>
+
+        <div class="mt-14 grid gap-6 md:grid-cols-3">
+          <!-- 1 -->
+          <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-7 transition hover:border-slate-300 hover:shadow-sm">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
+              <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3 class="mt-5 text-lg font-semibold text-ink-950">Fees &amp; refunds eat your revenue</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Processing fees, chargebacks, and refunds are deducted after the sale —
+              so the number you celebrated isn't the number that lands.
+            </p>
+          </div>
+          <!-- 2 -->
+          <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-7 transition hover:border-slate-300 hover:shadow-sm">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
+              <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="15" width="7" height="5" rx="1.5"/><rect x="14" y="15" width="7" height="5" rx="1.5"/></svg>
+            </div>
+            <h3 class="mt-5 text-lg font-semibold text-ink-950">Income scattered across platforms</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Payouts arrive from a dozen places on a dozen schedules. Stitching them
+              together in a spreadsheet is slow, manual, and easy to get wrong.
+            </p>
+          </div>
+          <!-- 3 -->
+          <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-7 transition hover:border-slate-300 hover:shadow-sm">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
+              <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>
+            </div>
+            <h3 class="mt-5 text-lg font-semibold text-ink-950">FX changes your numbers after the fact</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Cross-currency payouts settle at rates you didn't set. By the time funds
+              convert, your reported total and your bank balance no longer match.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section id="how" class="bg-slate-50 py-20 sm:py-24">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold uppercase tracking-wider text-brand-600">How it works</p>
+          <h2 class="mt-3 text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl">
+            One clear number, in three steps
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Connect your sources once and let Truenett do the reconciling.
+          </p>
+        </div>
+
+        <div class="mt-14 grid gap-6 md:grid-cols-3">
+          <!-- Step 1 -->
+          <div class="relative rounded-2xl border border-slate-200 bg-white p-7">
+            <span class="text-sm font-bold text-brand-600">Step 01</span>
+            <h3 class="mt-3 text-lg font-semibold text-ink-950">Connect your platforms</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Link the platforms that pay you. Truenett pulls in every payout,
+              fee line, and refund automatically.
+            </p>
+          </div>
+          <!-- Step 2 -->
+          <div class="relative rounded-2xl border border-slate-200 bg-white p-7">
+            <span class="text-sm font-bold text-brand-600">Step 02</span>
+            <h3 class="mt-3 text-lg font-semibold text-ink-950">We reconcile the details</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Fees, refunds, and FX conversions are matched to each transaction and
+              normalized into a single currency you choose.
+            </p>
+          </div>
+          <!-- Step 3 -->
+          <div class="relative rounded-2xl border border-slate-200 bg-white p-7">
+            <span class="text-sm font-bold text-brand-600">Step 03</span>
+            <h3 class="mt-3 text-lg font-semibold text-ink-950">See your true revenue</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Get one reconciled figure of what you actually kept — updated as new
+              payouts settle, ready to export whenever you need it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section id="pricing" class="bg-white py-20 sm:py-24">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold uppercase tracking-wider text-brand-600">Pricing</p>
+          <h2 class="mt-3 text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl">
+            Simple, honest pricing
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            One plan. Everything included. No per-platform surcharges.
+          </p>
+        </div>
+
+        <div class="mx-auto mt-14 max-w-md">
+          <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
+            <div class="absolute inset-x-0 top-0 h-1 bg-brand-500"></div>
+            <div class="p-8 sm:p-10">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-ink-950">Truenett</h3>
+                <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">Early access</span>
+              </div>
+
+              <div class="mt-6 flex items-end gap-1.5">
+                <span class="text-5xl font-extrabold tracking-tight text-ink-950">$9</span>
+                <span class="mb-1.5 text-base font-medium text-slate-500">/mo</span>
+              </div>
+              <p class="mt-2 text-sm text-slate-500">Billed monthly. Cancel anytime.</p>
+
+              <ul class="mt-8 space-y-3.5 text-sm text-slate-700">
+                <li class="flex items-start gap-3">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                  Connect all your payout platforms
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                  Automatic fee &amp; refund reconciliation
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                  Multi-currency FX normalization
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                  Export your reconciled data anytime
+                </li>
+              </ul>
+
+              <button data-open-modal data-cta-location="pricing"
+                class="mt-9 inline-flex w-full items-center justify-center rounded-xl bg-ink-950 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-ink-800 focus:outline-none focus:ring-2 focus:ring-ink-900 focus:ring-offset-2">
+                Get early access
+              </button>
+              <p class="mt-3 text-center text-xs text-slate-400">Early-access pricing locked in for early users.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-slate-200 bg-ink-950 text-slate-300">
+    <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+      <div class="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+        <div class="max-w-sm">
+          <div class="flex items-center gap-2.5">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M4 16 L10 10 L14 13 L20 6"/><path d="M15 6 H20 V11"/></svg>
+            </span>
+            <span class="text-[17px] font-bold tracking-tight text-white">Truenett</span>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-slate-400">
+            Reconciled revenue across every platform. One number you can actually trust.
+          </p>
+        </div>
+        <nav class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
+          <a href="#problem" class="text-slate-400 transition hover:text-white">The problem</a>
+          <a href="#how" class="text-slate-400 transition hover:text-white">How it works</a>
+          <a href="#pricing" class="text-slate-400 transition hover:text-white">Pricing</a>
+          <button data-open-modal data-cta-location="footer" class="text-slate-400 transition hover:text-white">Get early access</button>
+        </nav>
+      </div>
+      <div class="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center">
+        <p>© <span id="year">2026</span> Truenett. All rights reserved.</p>
+        <p>Built for people who want the real number.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ EMAIL-CAPTURE MODAL ============ -->
+  <div id="modal" x-modal class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div data-close-modal class="absolute inset-0 bg-ink-950/60 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl sm:p-8">
+      <button data-close-modal aria-label="Close"
+        class="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="width:20px;height:20px"><path fill-rule="evenodd" d="M4.3 4.3a1 1 0 011.4 0L10 8.6l4.3-4.3a1 1 0 111.4 1.4L11.4 10l4.3 4.3a1 1 0 01-1.4 1.4L10 11.4l-4.3 4.3a1 1 0 01-1.4-1.4L8.6 10 4.3 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg>
+      </button>
+
+      <!-- Form state -->
+      <div id="modal-form-state">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 ring-1 ring-brand-100">
+          <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+        </div>
+        <h2 id="modal-title" class="mt-5 text-xl font-bold tracking-tight text-ink-950">Get early access</h2>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Drop your email and we'll reach out when your spot opens up. No spam — just your invite.
+        </p>
+
+        <form id="email-form" class="mt-6 space-y-3" novalidate>
+          <!-- Honeypot: real users never see or fill this -->
+          <p class="hidden" aria-hidden="true">
+            <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          </p>
+          <div>
+            <label for="email" class="sr-only">Email address</label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-ink-950 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30" />
+          </div>
+          <p id="email-error" class="hidden text-sm text-red-600" role="alert"></p>
+          <button id="email-submit-btn" type="submit"
+            class="inline-flex w-full items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-semibold text-ink-950 shadow-sm transition hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
+            Request access
+          </button>
+        </form>
+        <p class="mt-4 text-center text-xs text-slate-400">We'll only use your email to send your invite.</p>
+      </div>
+
+      <!-- Success state -->
+      <div id="modal-success-state" class="hidden text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 ring-1 ring-brand-100">
+          <svg class="h-6 w-6 text-brand-600" viewBox="0 0 20 20" fill="currentColor" style="width:24px;height:24px"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 011.4-1.4l2.8 2.79 6.8-6.79a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+        </div>
+        <h2 class="mt-5 text-xl font-bold tracking-tight text-ink-950">You're on the list</h2>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Thanks for your interest in Truenett. We'll email you as soon as your early-access spot is ready.
+        </p>
+        <button data-close-modal
+          class="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-ink-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-ink-800">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== UTM attribution =====
+    // Captured once on load and reused for every event + form submission,
+    // so the source that drove the click is preserved even after in-page navigation.
+    const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    const utm = (() => {
+      const params = new URLSearchParams(window.location.search);
+      const out = {};
+      UTM_KEYS.forEach(k => { const v = params.get(k); if (v) out[k] = v; });
+      return out;
+    })();
+
+    // ===== Supabase client =====
+    // Replace with your project's URL + anon key (Project Settings → API).
+    const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Fire a PostHog custom event with UTM props attached.
+    // (PostHog also captures campaign params on $pageview automatically,
+    //  but we attach them explicitly so every event is self-contained.)
+    function track(event, extraProps) {
+      if (window.posthog) posthog.capture(event, Object.assign({}, utm, extraProps || {}));
+    }
+
+    // Modal controls
+    const modal = document.getElementById('modal');
+    const formState = document.getElementById('modal-form-state');
+    const successState = document.getElementById('modal-success-state');
+    const form = document.getElementById('email-form');
+    let lastFocused = null;
+
+    function openModal() {
+      lastFocused = document.activeElement;
+      formState.classList.remove('hidden');
+      successState.classList.add('hidden');
+      form.reset();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById('email').focus(), 50);
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+      if (lastFocused) lastFocused.focus();
+    }
+
+    // Every "Get early access" button opens the modal AND fires a distinct
+    // cta_click event. This is independent of email_submit — the gap between
+    // the two counts is the key funnel metric.
+    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        track('cta_click', { location: btn.getAttribute('data-cta-location') || 'unknown' });
+        openModal();
+      });
+    });
+    document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', closeModal));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+    });
+
+    // Submit — insert the signup into Supabase.
+    const submitBtn = document.getElementById('email-submit-btn');
+    const emailInput = document.getElementById('email');
+    const errorEl = document.getElementById('email-error');
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.classList.remove('hidden');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.classList.add('hidden');
+
+      // Honeypot — if a bot filled the hidden field, pretend success and bail.
+      if (form.querySelector('input[name="bot-field"]').value) {
+        formState.classList.add('hidden');
+        successState.classList.remove('hidden');
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      if (!emailInput.checkValidity() || !email) {
+        showError('Please enter a valid email address.');
+        emailInput.focus();
+        return;
+      }
+
+      // Fire email_submit up front — independent of the network / DB result,
+      // so the funnel metric stays clean.
+      track('email_submit');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      const { error } = await sb.from('early_access_signups').insert({
+        email,
+        referrer: document.referrer || null,
+        utm_source: utm.utm_source || null,
+        utm_medium: utm.utm_medium || null,
+        utm_campaign: utm.utm_campaign || null,
+        utm_term: utm.utm_term || null,
+        utm_content: utm.utm_content || null,
+      });
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Request access';
+
+      if (error) {
+        // 23505 = unique_violation → email already signed up; treat as success.
+        if (error.code === '23505') {
+          formState.classList.add('hidden');
+          successState.classList.remove('hidden');
+          return;
+        }
+        console.error('Supabase insert failed:', error);
+        showError('Something went wrong. Please try again.');
+        return;
+      }
+
+      formState.classList.add('hidden');
+      successState.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
