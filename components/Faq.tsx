@@ -1,6 +1,9 @@
+"use client";
+
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 import { faqs } from "@/lib/faqs";
+import { track } from "@/lib/analytics";
 
 /**
  * Native <details>/<summary> accordion: keyboard-accessible, zero JS,
@@ -28,7 +31,14 @@ export default function Faq() {
         <div className="mt-14 space-y-3">
           {faqs.map((faq, i) => (
             <Reveal key={faq.q} delay={Math.min(i * 0.02, 0.12)}>
-              <details className="faq line group rounded-2xl border bg-panel transition-colors hover:border-white/16 open:border-white/16">
+              <details
+                className="faq line group rounded-2xl border bg-panel transition-colors hover:border-white/16 open:border-white/16"
+                onToggle={(e) => {
+                  if ((e.currentTarget as HTMLDetailsElement).open) {
+                    track("faq_item_expanded", { question: faq.q });
+                  }
+                }}
+              >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-[15px] font-medium text-fg">
                   {faq.q}
                   <svg

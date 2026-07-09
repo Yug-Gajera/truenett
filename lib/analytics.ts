@@ -1,19 +1,6 @@
 "use client";
 
-/**
- * PostHog helpers. Event names and the `location` property are kept
- * identical to the previous landing page so existing funnels
- * (cta_click → email_submit) keep reporting without changes.
- */
-
-declare global {
-  interface Window {
-    posthog?: {
-      capture: (event: string, props?: Record<string, unknown>) => void;
-      identify: (id: string, props?: Record<string, unknown>) => void;
-    };
-  }
-}
+import posthog from "posthog-js";
 
 const UTM_KEYS = [
   "utm_source",
@@ -40,11 +27,11 @@ export function getUtm(): Record<string, string> {
 }
 
 export function track(event: string, extraProps?: Record<string, unknown>) {
-  if (typeof window === "undefined" || !window.posthog) return;
-  window.posthog.capture(event, { ...getUtm(), ...extraProps });
+  if (typeof window === "undefined") return;
+  posthog.capture(event, { ...getUtm(), ...extraProps });
 }
 
 export function identify(email: string) {
-  if (typeof window === "undefined" || !window.posthog) return;
-  window.posthog.identify(email, { email });
+  if (typeof window === "undefined") return;
+  posthog.identify(email, { email });
 }

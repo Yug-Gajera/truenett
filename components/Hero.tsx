@@ -1,6 +1,9 @@
+"use client";
+
 import Reveal from "./Reveal";
 import CtaButton from "./CtaButton";
 import DashboardMock from "./DashboardMock";
+import { track } from "@/lib/analytics";
 
 export default function Hero() {
   return (
@@ -47,6 +50,7 @@ export default function Hero() {
               </CtaButton>
               <a
                 href="#how-it-works"
+                onClick={() => track("hero_secondary_cta_clicked", { label: "see_how_it_works" })}
                 className="line inline-flex h-12 w-full items-center justify-center rounded-lg border bg-panel px-7 text-[15px] font-medium text-fg-mid transition-colors hover:border-white/20 hover:text-fg sm:w-auto"
               >
                 See how it works

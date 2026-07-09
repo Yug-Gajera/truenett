@@ -1,4 +1,7 @@
+"use client";
+
 import Logo from "./Logo";
+import { track } from "@/lib/analytics";
 
 const columns = [
   {
@@ -59,7 +62,15 @@ export default function Footer() {
                       href={link.href}
                       className="text-fg-dim transition-colors hover:text-fg"
                       {...(link.href.startsWith("http")
-                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        ? {
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                            onClick: () =>
+                              track("footer_link_clicked", {
+                                label: link.label,
+                                href: link.href,
+                              }),
+                          }
                         : {})}
                     >
                       {link.label}

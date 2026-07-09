@@ -1,5 +1,8 @@
+"use client";
+
 import Reveal from "./Reveal";
 import CtaButton from "./CtaButton";
+import { track } from "@/lib/analytics";
 
 export default function FinalCta() {
   return (
@@ -29,6 +32,7 @@ export default function FinalCta() {
             </CtaButton>
             <a
               href="#problem"
+              onClick={() => track("closing_secondary_cta_clicked", { label: "re_read_the_case" })}
               className="line inline-flex h-12 items-center justify-center rounded-lg border bg-panel px-7 text-[15px] font-medium text-fg-mid transition-colors hover:border-white/20 hover:text-fg"
             >
               Re-read the case
