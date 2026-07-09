@@ -601,7 +601,10 @@
     const form = document.getElementById('email-form');
     let lastFocused = null;
 
-    function openModal() {
+    let _modalOpenLocation = 'unknown';
+
+    function openModal(location) {
+      _modalOpenLocation = location || 'unknown';
       lastFocused = document.activeElement;
       formState.classList.remove('hidden');
       successState.classList.add('hidden');
@@ -609,14 +612,16 @@
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.body.style.overflow = 'hidden';
+      track('modal_opened', { location: _modalOpenLocation });
       setTimeout(() => document.getElementById('email').focus(), 50);
     }
 
-    function closeModal() {
+    function closeModal(method) {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       document.body.style.overflow = '';
       if (lastFocused) lastFocused.focus();
+      track('modal_closed', { location: _modalOpenLocation, method: method || 'unknown' });
     }
 
     // Every "Get early access" button opens the modal AND fires a distinct
@@ -624,14 +629,37 @@
     // the two counts is the key funnel metric.
     document.querySelectorAll('[data-open-modal]').forEach(btn => {
       btn.addEventListener('click', () => {
-        track('cta_click', { location: btn.getAttribute('data-cta-location') || 'unknown' });
-        openModal();
+        const location = btn.getAttribute('data-cta-location') || 'unknown';
+        track('cta_click', { location });
+        openModal(location);
       });
     });
-    document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', closeModal));
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+    document.querySelectorAll('[data-close-modal]').forEach(btn => {
+      btn.addEventListener('click', () => closeModal('button'));
     });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal('keyboard');
+    });
+
+    // Nav link click tracking
+    document.querySelectorAll('header nav a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        track('nav_link_clicked', { target: link.getAttribute('href').replace('#', '') });
+      });
+    });
+
+    // Pricing section viewed — fires once when section enters viewport
+    (() => {
+      const pricingSection = document.getElementById('pricing');
+      if (!pricingSection || !('IntersectionObserver' in window)) return;
+      const io = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          track('pricing_section_viewed');
+          io.disconnect();
+        }
+      }, { threshold: 0.2 });
+      io.observe(pricingSection);
+    })();
 
     // Submit — insert the signup into Supabase.
     const submitBtn = document.getElementById('email-submit-btn');
@@ -692,15 +720,20 @@
       if (error) {
         // 23505 = unique_violation → email already signed up; treat as success.
         if (error.code === '23505') {
+          if (window.posthog) posthog.identify(email, { email });
+          track('email_signup_success', { returning: true });
           formState.classList.add('hidden');
           successState.classList.remove('hidden');
           return;
         }
         console.error('Supabase insert failed:', error);
+        track('email_signup_error', { error_code: error.code });
         showError('Something went wrong. Please try again.');
         return;
       }
 
+      if (window.posthog) posthog.identify(email, { email });
+      track('email_signup_success', { returning: false });
       formState.classList.add('hidden');
       successState.classList.remove('hidden');
     });
