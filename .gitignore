@@ -22,5 +22,11 @@ config.js
 *.log
 npm-debug.log*
 
-# Dependencies (only if you ever add a build step)
+# Dependencies
 node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
