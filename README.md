@@ -73,7 +73,6 @@ RLS is the security boundary: the public anon key can insert a signup but never 
 
 ## Before launch — TODO
 
-- [ ] Replace the **placeholder testimonials** in `components/Testimonials.tsx` with real, permissioned quotes (they are fictional).
 - [ ] Add a real 1200×630 **OG image** at `public/og.png` (referenced in `app/layout.tsx`).
 - [ ] Create real **Privacy** and **Terms** pages and update the footer links.
 - [ ] Point the footer **Twitter/Docs/Roadmap** links at real destinations.

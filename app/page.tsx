@@ -11,7 +11,6 @@ import FeatureGrid from "@/components/FeatureGrid";
 import Personas from "@/components/Personas";
 import Integrations from "@/components/Integrations";
 import BeforeAfter from "@/components/BeforeAfter";
-import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
 import FinalCta from "@/components/FinalCta";
@@ -33,7 +32,6 @@ export default function Home() {
         <Personas />
         <Integrations />
         <BeforeAfter />
-        <Testimonials />
         <Pricing />
         <Faq />
         <FinalCta />
