@@ -16,12 +16,7 @@ import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
 import FinalCta from "@/components/FinalCta";
 import Footer from "@/components/Footer";
-import posthog from 'posthog-js'
 
-posthog.init('phc_yJRVj9FTs3zcKebyw3yJPxJJX8AhMyq3vKqcACSySYs4', {
-    api_host: 'https://us.i.posthog.com',
-    defaults: '2026-05-30'
-})
 export default function Home() {
   return (
     <WaitlistProvider>
