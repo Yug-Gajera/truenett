@@ -109,7 +109,7 @@ export default function WhyToolsFail() {
               ))}
             </ul>
             <CtaButton location="comparison" variant="brand" className="mt-6 w-full">
-              Get early access
+              Join waitlist
             </CtaButton>
           </Reveal>
         </div>

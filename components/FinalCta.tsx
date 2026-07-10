@@ -28,7 +28,7 @@ export default function FinalCta() {
         <Reveal delay={0.15}>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <CtaButton location="closing" variant="brand" size="lg">
-              Get early access
+              Join waitlist
             </CtaButton>
             <a
               href="#problem"

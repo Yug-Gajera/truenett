@@ -172,7 +172,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
             ) : (
               <>
                 <h2 id="waitlist-title" className="text-lg font-semibold tracking-tight">
-                  Get early access
+                  Join the waitlist
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-fg-mid">
                   Drop your email and we'll reach out when your spot opens up. Founding-member
@@ -211,7 +211,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
                     disabled={status === "submitting"}
                     className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fg px-6 text-sm font-medium text-base transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {status === "submitting" ? "Submitting…" : "Request access"}
+                    {status === "submitting" ? "Submitting…" : "Join waitlist"}
                   </button>
                 </form>
                 <p className="mt-4 text-center text-[13px] text-fg-dim">

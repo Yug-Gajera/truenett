@@ -46,7 +46,7 @@ export default function Hero() {
           <Reveal delay={0.15}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <CtaButton location="hero" variant="brand" size="lg" className="w-full sm:w-auto">
-                Get early access
+                Join waitlist
               </CtaButton>
               <a
                 href="#how-it-works"

@@ -31,7 +31,7 @@ export default function Nav() {
             </a>
           ))}
         </div>
-        <CtaButton location="nav">Get early access</CtaButton>
+        <CtaButton location="nav">Join waitlist</CtaButton>
       </nav>
     </header>
   );
