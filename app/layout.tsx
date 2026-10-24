@@ -21,33 +21,33 @@ const SITE_URL = "https://www.truenett.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "TrueNett — See Your True Net Income After Fees, Refunds & Taxes",
+  title: "TrueNett — Multi-platform financial reconciliation",
   description:
-    "TrueNett connects Stripe, PayPal, Gumroad, Shopify and more, then subtracts platform fees, refunds, chargebacks, FX losses, taxes and expenses to show what you actually earned — in one dashboard.",
+    "TrueNett reconciles financial records across the systems your money moves through — payments, banking and accounting. It matches charges, fees, refunds, payouts, deposits and ledger entries, keeps the evidence behind each match, and separates genuine discrepancies from evidence still in transit. Pre-launch: recruiting design partners.",
   keywords: [
-    "net income tracker",
-    "creator finance dashboard",
-    "Stripe net revenue",
-    "freelancer income tracking",
-    "profit analytics",
-    "revenue reconciliation",
+    "financial reconciliation software",
+    "payout to bank reconciliation",
+    "continuous reconciliation",
+    "month-end close reconciliation",
+    "Stripe reconciliation",
+    "SaaS finance operations",
   ],
   alternates: { canonical: SITE_URL },
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: "TrueNett",
-    title: "TrueNett — Know what you actually earned",
+    title: "TrueNett — Reconciliation across the systems your money moves through",
     description:
-      "Revenue is what platforms report. Net is what you keep. TrueNett reconciles every fee, refund, and tax across all your platforms into one true number.",
+      "Match every charge, fee, refund, payout, deposit and accounting entry to its counterpart — continuously, and at period close. Pre-launch; recruiting design partners.",
     // TODO: add a real 1200×630 OG image at /public/og.png and reference it here.
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "TrueNett dashboard" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "TrueNett reconciliation workspace" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TrueNett — Know what you actually earned",
+    title: "TrueNett — Multi-platform financial reconciliation",
     description:
-      "One dashboard that subtracts fees, refunds, FX and taxes from every platform that pays you.",
+      "Reconciliation between payments, banking and accounting: matched records, kept evidence, and exceptions that explain themselves.",
     images: ["/og.png"],
   },
   icons: {
@@ -63,13 +63,8 @@ const softwareSchema = {
   operatingSystem: "Web",
   url: SITE_URL,
   description:
-    "Finance analytics platform that calculates true net income for creators, freelancers, agencies and online businesses by reconciling fees, refunds, chargebacks, FX, taxes and expenses across Stripe, PayPal, Gumroad, Shopify and more.",
-  offers: {
-    "@type": "Offer",
-    price: "15.00",
-    priceCurrency: "USD",
-    description: "Everything included. $15 per month, cancel anytime.",
-  },
+    "Multi-platform financial reconciliation for SaaS businesses and lean finance teams. Collects records from payment platforms, banks and accounting systems, matches the records that describe the same money, tracks the evidence behind each match, and surfaces exceptions — continuously and at period close. Pre-launch; in development with design partners.",
+  applicationSubCategory: "Financial reconciliation",
 };
 
 const faqSchema = {

@@ -4,39 +4,39 @@ import CtaButton from "./CtaButton";
 
 const tools = [
   {
-    name: "Stripe Dashboard",
-    verdict: "Sees one platform. Leads with gross.",
+    name: "Your payment platform",
+    verdict: "Reconciles itself, and only itself.",
     points: [
-      "Blind to PayPal, Gumroad, AdSense — everything else",
-      "Headlines gross volume, not what you keep",
-      "No expenses, no taxes, no full picture",
+      "Knows its own fees and payouts — nothing about your bank or ledger",
+      "Can't see a second processor, a marketplace or a wire paid by invoice",
+      "No concept of an invoice it didn't issue, or a credit note it didn't create",
     ],
   },
   {
-    name: "QuickBooks / Xero",
-    verdict: "Built for accountants, not for you.",
+    name: "Accounting software",
+    verdict: "Matches bank lines, not the records behind them.",
     points: [
-      "Days of setup, chart-of-accounts jargon",
-      "Treats a Gumroad payout as one opaque lump",
-      "Answers compliance questions, not “what did I make?”",
+      "A payout arrives as one lump; the charges, fees and refunds inside it stay invisible",
+      "Built around the bank feed, so timing differences look like errors",
+      "Reconciliation state lives in someone's head between closes",
     ],
   },
   {
     name: "Spreadsheets",
-    verdict: "Accurate for exactly one afternoon.",
+    verdict: "Correct on the day they are built.",
     points: [
-      "Manual CSV exports from every platform, every month",
-      "One broken formula silently corrupts everything",
-      "Stale the moment you hit save",
+      "Manual exports from every system, re-done every period",
+      "No record of why a line was matched, so last month can't be re-checked",
+      "Nothing holds a match open while the evidence is still in transit",
     ],
   },
 ];
 
-const truenettPoints = [
-  "Every platform in one place, automatically",
-  "Leads with true net — after every deduction",
-  "Fee-level detail on each transaction",
-  "Always current as payouts settle",
+const ours = [
+  "Matching between systems, not inside one",
+  "Evidence stored with every match, so decisions can be audited",
+  "Delays and discrepancies kept apart",
+  "Continuous state and period close from the same records",
 ];
 
 export default function WhyToolsFail() {
@@ -44,9 +44,9 @@ export default function WhyToolsFail() {
     <section className="line border-t bg-panel/40 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Why existing tools fail"
-          title="You already have dashboards. None of them answer the question."
-          lede="Each tool you're using was built to answer someone else's question — the platform's, the accountant's, the IRS's. TrueNett is built to answer yours: what did I actually earn?"
+          eyebrow="Where the gap is"
+          title="Every system reconciles its own half of the story."
+          lede="None of these tools is wrong — each does the job it was built for. The work that falls between them, every month, is the work TrueNett is being built to do."
         />
 
         <div className="mt-16 grid gap-4 lg:grid-cols-4">
@@ -78,7 +78,6 @@ export default function WhyToolsFail() {
             </Reveal>
           ))}
 
-          {/* TrueNett card — visually elevated */}
           <Reveal
             delay={0.21}
             className="relative rounded-2xl border border-brand-500/40 bg-panel p-6 shadow-[0_0_60px_-16px_rgba(16,185,129,0.25)]"
@@ -86,12 +85,12 @@ export default function WhyToolsFail() {
             <span className="absolute -top-2.5 left-6 rounded-full bg-brand-500 px-2.5 py-0.5 text-[11px] font-semibold text-base">
               TrueNett
             </span>
-            <h3 className="text-[15px] font-semibold text-fg">One honest number</h3>
+            <h3 className="text-[15px] font-semibold text-fg">The layer in between</h3>
             <p className="mt-1.5 text-[13px] italic text-fg-dim">
-              Built for the person running the business.
+              One reconciliation state across all of them.
             </p>
             <ul className="mt-5 space-y-3 text-sm text-fg-mid">
-              {truenettPoints.map((p) => (
+              {ours.map((p) => (
                 <li key={p} className="flex gap-2.5 leading-snug">
                   <svg
                     className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-400"
@@ -109,7 +108,7 @@ export default function WhyToolsFail() {
               ))}
             </ul>
             <CtaButton location="comparison" variant="brand" className="mt-6 w-full">
-              Join waitlist
+              Talk to us
             </CtaButton>
           </Reveal>
         </div>

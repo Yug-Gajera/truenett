@@ -3,29 +3,29 @@ import SectionHeading from "./SectionHeading";
 
 const steps = [
   {
-    title: "Connect your platforms",
-    body: "Authorize read-only connections to Stripe, PayPal, Gumroad, Lemon Squeezy and the rest. OAuth or restricted keys — TrueNett can look, never touch.",
-    detail: "~2 minutes per platform",
+    title: "Collect records as they appear",
+    body: "Charges, fees, refunds, payouts, bank lines and accounting entries are pulled in as each source makes them available — not all at once at month end. Each record keeps its source, its identifier and the time it was observed.",
+    detail: "Continuous, per source",
   },
   {
-    title: "We import every transaction",
-    body: "Sales, payouts, fee lines, refunds, disputes — including history, so your past months get reconciled too, not just the ones ahead.",
-    detail: "Automatic, including history",
+    title: "Match counterparts across systems",
+    body: "A payout is matched to the charges, fees and refunds it is composed of, and then to the deposit that carries it. A charge is matched to the invoice it settles and the credit note that reverses it. Amount, date window, currency and reference all contribute.",
+    detail: "Many-to-one, not line-by-line",
   },
   {
-    title: "Categorize your expenses",
-    body: "Add subscriptions, contractors and ad spend once. TrueNett remembers each category and applies it to everything that follows.",
-    detail: "Once — then it's remembered",
+    title: "Weigh the evidence behind each match",
+    body: "A match is only as strong as what supports it. Two sources agreeing on an exact amount and a reference is a verified match. An amount that is close but not equal is a possible match, and stays that way until someone confirms it.",
+    detail: "Evidence kept with the match",
   },
   {
-    title: "See your true net income",
-    body: "Fees matched to transactions, currencies normalized, refunds netted out, your tax rate applied. One reconciled figure that updates as payouts settle.",
-    detail: "The number your bank agrees with",
+    title: "Separate waiting from wrong",
+    body: "A deposit that has not reached the bank feed yet is not a discrepancy — it is missing evidence, and TrueNett says so. Only differences with evidence on both sides become exceptions, with the records, amounts and timing that produced them.",
+    detail: "The distinction most tools skip",
   },
   {
-    title: "Act on what you learn",
-    body: "Refund spikes, fee creep, a subscription you forgot, margins thinning on one platform — surfaced as alerts and insights, not buried in rows.",
-    detail: "Insights, not just charts",
+    title: "Review the month, or close it",
+    body: "The same matched records answer both questions: what needs attention right now, and whether a chosen month, quarter or date range is fully reconciled — with every remaining open item listed by name.",
+    detail: "One dataset, two views",
   },
 ];
 
@@ -37,21 +37,25 @@ export default function HowItWorks() {
           eyebrow="How it works"
           title={
             <>
-              From scattered payouts to one true number, in{" "}
-              <span className="accent-serif">five</span> steps.
+              Collect, match, weigh the{" "}
+              <span className="accent-serif">evidence</span>, surface what's left.
             </>
           }
-          lede="No bookkeeping knowledge. No chart of accounts. No weekend lost to setup."
+          lede="Reconciliation is not a report you run. It is a state TrueNett maintains, so that closing a month is a review rather than a reconstruction."
         />
 
         <ol className="relative mx-auto mt-16 max-w-2xl">
-          {/* Vertical connector */}
           <div
             className="absolute bottom-6 left-[19px] top-6 w-px bg-gradient-to-b from-brand-500/60 via-white/10 to-transparent"
             aria-hidden="true"
           />
           {steps.map((step, i) => (
-            <Reveal as="li" key={step.title} delay={i * 0.05} className="relative flex gap-6 pb-12 last:pb-0">
+            <Reveal
+              as="li"
+              key={step.title}
+              delay={i * 0.05}
+              className="relative flex gap-6 pb-12 last:pb-0"
+            >
               <span className="line z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-panel text-sm font-semibold text-brand-400">
                 {i + 1}
               </span>

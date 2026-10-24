@@ -1,12 +1,22 @@
 # TrueNett — landing page
 
-Premium dark landing page for TrueNett, built with **Next.js (App Router) + Tailwind CSS v4 + TypeScript**. No animation libraries — scroll reveals, counters and micro-interactions are hand-rolled CSS + IntersectionObserver. Deploys to Vercel.
+Pre-launch landing page for TrueNett, a multi-platform financial reconciliation
+product (payments ↔ banking ↔ accounting). The page positions reconciliation —
+matched records, tracked evidence, exceptions — and recruits design partners; it
+does not claim any live integration, because none exists yet.
+
+Built with **Next.js (App Router) + Tailwind CSS v4 + TypeScript**. No animation
+libraries — scroll reveals and micro-interactions are hand-rolled CSS +
+IntersectionObserver. Deploys to Vercel.
 
 ```bash
 npm install
 npm run dev     # http://localhost:3000
-npm run build   # production build
+npm run build   # production build (also type-checks)
 ```
+
+`npm run lint` is not usable as-is: no ESLint config is committed, so `next lint`
+drops into its interactive setup prompt. Type checking runs as part of the build.
 
 ## Configuration — env vars, never committed
 
@@ -14,8 +24,7 @@ All keys are **publishable** (visible in the browser by design). They live in `.
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project API key (analytics) |
-| `NEXT_PUBLIC_POSTHOG_HOST` | Optional — set to `https://eu.i.posthog.com` for EU cloud |
+| `NEXT_PUBLIC_FIREBASE_*` | Firebase Analytics (see `lib/analytics.ts`) |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (email capture) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key — inserts gated by RLS |
 
@@ -34,7 +43,7 @@ Event names are unchanged from the previous site, so existing insights keep work
 
 | Event | Fired when |
 | --- | --- |
-| `cta_click` | Any "Get early access" button (`location`: `nav` / `hero` / `comparison` / `pricing` / `closing`) |
+| `cta_click` | Any "Apply as a design partner" button (`location`: `nav` / `hero` / `comparison` / `pricing` / `closing`) |
 | `modal_opened` / `modal_closed` | Waitlist modal lifecycle |
 | `email_submit` | Form submitted (before the network call — clean funnel metric) |
 | `email_signup_success` / `email_signup_error` | Supabase insert result (`returning: true` = duplicate email) |
@@ -71,6 +80,23 @@ create policy "anon can insert signups"
 
 RLS is the security boundary: the public anon key can insert a signup but never read, update or delete. Read your leads in the Supabase dashboard (Table Editor → `early_access_signups`). A duplicate email returns HTTP 409, which the UI treats as "already on the list".
 
+## Signup form
+
+The modal collects **an email address only** — that is the whole of the
+`early_access_signups` schema (plus UTM/referrer captured automatically). Stack
+and reconciliation questions are asked in the reply email on purpose, so the
+page never implies it is collecting data it isn't.
+
+To collect them in the form instead, add the columns first, then extend
+`lib/waitlist.ts` and the modal — an insert naming a column that doesn't exist
+is rejected with HTTP 400:
+
+```sql
+alter table public.early_access_signups
+  add column tools text,
+  add column reconciliation_pain text;
+```
+
 ## Before launch — TODO
 
 - [ ] Add a real 1200×630 **OG image** at `public/og.png` (referenced in `app/layout.tsx`).
@@ -85,10 +111,21 @@ app/
   page.tsx          # section composition
   globals.css       # design tokens (@theme), noise/grid, reveal + flow animations
 components/         # one file per section + shared primitives
+  Hero.tsx          # positioning + ReconMock
+  ReconMock.tsx     # product demo: continuous / period-close workspace (illustrative data)
+  Problem.tsx       # one payout decomposed across three systems
+  WhyToolsFail.tsx  # where each existing tool stops
+  HowItWorks.tsx    # collect → match → weigh evidence → exceptions → close
+  Statuses.tsx      # matched / awaiting evidence / possible match / exception
+  Showcase.tsx      # anatomy of one exception (hypothesis vs confirmed cause)
+  Modes.tsx         # continuous vs period-end reconciliation
+  FeatureGrid.tsx   # build status — what exists, what is in design, what is planned
+  Integrations.tsx  # integration plan (nothing connected yet)
+  Personas.tsx      # SaaS founders / lean finance teams / fractional CFOs
+  Pricing.tsx       # design-partner program (no price yet)
   Reveal.tsx        # scroll-reveal wrapper (IntersectionObserver)
-  Counter.tsx       # animated count-up numbers
-  CtaButton.tsx     # tracked CTA (opens waitlist modal)
-  WaitlistProvider.tsx  # modal + Supabase submit + PostHog events
+  CtaButton.tsx     # tracked CTA (opens application modal)
+  WaitlistProvider.tsx  # modal + Supabase submit + analytics events
 lib/
   analytics.ts      # track/identify + UTM capture
   waitlist.ts       # Supabase REST insert

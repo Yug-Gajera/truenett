@@ -5,22 +5,24 @@ import { track } from "@/lib/analytics";
 
 const columns = [
   {
-    title: "Product",
+    title: "The page",
     links: [
       { label: "The problem", href: "#problem" },
       { label: "How it works", href: "#how-it-works" },
-      { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#pricing" },
+      { label: "Exceptions", href: "#exceptions" },
+      { label: "Build status", href: "#features" },
+      { label: "Integrations", href: "#integrations" },
+      { label: "Early access", href: "#early-access" },
       { label: "FAQ", href: "#faq" },
     ],
   },
   {
-    title: "Resources",
-    // TODO: point at real pages once they exist.
+    title: "Product",
     links: [
-      { label: "Documentation", href: "#faq" },
+      { label: "Continuous vs. period close", href: "#modes" },
+      { label: "Match statuses", href: "#statuses" },
+      { label: "Who we build with", href: "#who" },
       { label: "Roadmap", href: "mailto:hello@truenett.com?subject=Roadmap" },
-      { label: "Changelog", href: "#top" },
     ],
   },
   {
@@ -48,8 +50,8 @@ export default function Footer() {
           <div className="max-w-xs">
             <Logo />
             <p className="mt-4 text-sm leading-relaxed text-fg-dim">
-              True net income across every platform that pays you. One number you can
-              actually trust.
+              Reconciliation across the systems your money moves through. Pre-launch, and
+              building with design partners.
             </p>
           </div>
           {columns.map((col) => (
@@ -83,7 +85,7 @@ export default function Footer() {
         </div>
         <div className="line mt-14 flex flex-col items-start justify-between gap-3 border-t pt-6 text-[13px] text-fg-dim sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} TrueNett. All rights reserved.</p>
-          <p>Built for people who want the real number.</p>
+          <p>Pre-launch · No integrations connected yet</p>
         </div>
       </div>
     </footer>

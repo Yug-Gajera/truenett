@@ -14,32 +14,33 @@ export default function FinalCta() {
       <div className="relative mx-auto max-w-6xl px-6 text-center lg:px-8">
         <Reveal>
           <h2 className="mx-auto max-w-2xl text-4xl font-semibold tracking-tightest text-fg sm:text-5xl sm:leading-[1.1]">
-            You already earned the money.
+            Show us where your month
             <br />
-            Now find out <span className="accent-serif text-brand-300">how much</span>.
+            stops <span className="accent-serif text-brand-300">adding up</span>.
           </h2>
         </Reveal>
         <Reveal delay={0.08}>
-          <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-fg-mid">
-            Join the early-access list. Two minutes of setup, one honest number, and
-            founding pricing locked in for life.
+          <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-fg-mid">
+            We're building reconciliation with a small group of SaaS teams and lean finance
+            people. If closing your month means chasing records between a processor, a bank
+            and a ledger, we'd like to hear how.
           </p>
         </Reveal>
         <Reveal delay={0.15}>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <CtaButton location="closing" variant="brand" size="lg">
-              Join waitlist
+              Apply as a design partner
             </CtaButton>
             <a
-              href="#problem"
-              onClick={() => track("closing_secondary_cta_clicked", { label: "re_read_the_case" })}
+              href="mailto:hello@truenett.com?subject=Reconciliation%20%E2%80%94%20my%20stack&body=Which%20systems%20my%20records%20live%20in%3A%0A%0AHow%20I%20reconcile%20today%3A%0A%0AWhere%20it%20breaks%3A%0A"
+              onClick={() => track("closing_secondary_cta_clicked", { label: "email_founders" })}
               className="line inline-flex h-12 items-center justify-center rounded-lg border bg-panel px-7 text-[15px] font-medium text-fg-mid transition-colors hover:border-white/20 hover:text-fg"
             >
-              Re-read the case
+              Email us instead
             </a>
           </div>
           <p className="mt-5 text-[13px] text-fg-dim">
-            No credit card · No spam · Unsubscribe anytime
+            No credit card · No credentials · Nothing to install
           </p>
         </Reveal>
       </div>

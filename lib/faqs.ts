@@ -4,67 +4,59 @@
  */
 export const faqs: { q: string; a: string }[] = [
   {
-    q: "What exactly does TrueNett do?",
-    a: "TrueNett connects to the platforms that pay you — Stripe, PayPal, Gumroad, Lemon Squeezy, Shopify and more — imports every transaction, and subtracts platform fees, processor fees, refunds, chargebacks, currency-conversion losses, estimated taxes, and your operating expenses. The result is your true net income: the number that actually lands in your pocket, not the gross figure platforms show you.",
+    q: "What does TrueNett actually do?",
+    a: "TrueNett reconciles financial records across the separate systems a business already uses. It collects the records each system produces — charges, platform and processor fees, refunds, payouts, bank deposits, invoices, credit notes and accounting entries — then matches the ones that describe the same money, keeps the evidence behind each match, and reports what is left over: records still waiting on a source, matches that look likely but aren't proven, and genuine differences that need a person.",
   },
   {
-    q: "How is this different from my Stripe dashboard?",
-    a: "Stripe only knows about Stripe, and it leads with gross volume. It doesn't see your PayPal income, your Gumroad sales, your AdSense payouts, your software subscriptions, or your tax bill. TrueNett combines every income source and every deduction into one reconciled number — so you don't have to open six dashboards and a spreadsheet to figure out how the month really went.",
+    q: "Can I use it today?",
+    a: "No. TrueNett is pre-launch: this website and the design-partner signup are the only things running. No integration is implemented, there is no application to log into, and the interface shown on this page is an illustrative design, not a live account. We are recruiting a small number of design partners to build it with.",
   },
   {
-    q: "Can't I just use a spreadsheet?",
-    a: "You can — most of our users did, right up until a formula silently broke or they fell three months behind on exports. Spreadsheets require you to manually download CSVs from every platform, normalize currencies, remember every fee schedule, and keep doing all of that every single month. TrueNett does the same reconciliation automatically and stays current as new payouts settle.",
+    q: "Why isn't my payment platform's own reconciliation enough?",
+    a: "Because it only knows its own records. Your payment platform can tell you that a payout of $18,204.62 was made up of 412 charges less fees and refunds. It cannot tell you whether that amount reached your bank, whether the bank deducted a fee on the way, whether the refunds inside it belong to this month, or whether your ledger recorded all of it. Reconciliation within one system is the easy half; the differences live between systems.",
   },
   {
-    q: "Is TrueNett an accounting tool like QuickBooks?",
-    a: "No — and that's deliberate. QuickBooks is built for accountants doing double-entry bookkeeping and formal compliance. TrueNett is built for the person running the business who wants to answer one question fast: \"What did I actually make?\" You can still hand your accountant clean exports at tax time; TrueNett just makes sure you understand your numbers all year round.",
+    q: "What's the difference between continuous and period-end reconciliation?",
+    a: "Continuous reconciliation matches records as each source publishes them, so the state of the current month is always up to date and problems surface within days. Period-end reconciliation is reviewing a chosen month, quarter or date range against those same already-matched records — checking what is still open and preparing a reconciliation summary. TrueNett is designed to do both from one dataset, so the two views can't disagree with each other.",
   },
   {
-    q: "Which platforms does TrueNett support?",
-    a: "At launch: Stripe, Lemon Squeezy, Gumroad, and PayPal. Coming soon: Shopify, Paddle, Google AdSense, and Wise. Direct bank-account connections are on the roadmap. You can also import CSVs from any platform we don't yet connect to natively.",
+    q: "How is a delay different from a discrepancy?",
+    a: "A payout initiated yesterday that your bank feed will publish tomorrow is not a difference — it is evidence that hasn't arrived. Treating it as a problem is how reconciliation tools generate noise that people learn to ignore. TrueNett holds those records as awaiting evidence and only opens an exception when both sides have reported and still disagree.",
   },
   {
-    q: "How does TrueNett estimate taxes?",
-    a: "You set your estimated effective tax rate (or separate rates per income type), and TrueNett applies it to your reconciled net so you always see a post-tax figure. It's an estimate to keep you honest with yourself — not tax advice — and you can adjust the rate anytime or turn the feature off.",
+    q: "What's a 'possible match' and why not just match it?",
+    a: "A verified match is two or more records that agree on amount, timing and reference, with the supporting evidence stored. A possible match is a pair that probably belongs together but where the evidence falls short — an invoice for EUR 1,150.00 against a settled charge of USD 1,225.00, for instance. Automatically accepting that would hide a real error behind a plausible story, so it is proposed for a person to confirm or reject and is never counted as reconciled on its own.",
   },
   {
-    q: "Does TrueNett handle multiple currencies?",
-    a: "Yes. Payouts in EUR, GBP, INR or any other currency are normalized into your base currency using the actual settlement rates where the platform provides them, so FX losses show up as their own line item instead of silently shrinking your totals.",
+    q: "What kinds of exception does it look for?",
+    a: "The planned categories are missing records (a refund with no credit note), mismatched amounts (a deposit smaller than its payout), duplicates (the same payment recorded twice under different identifiers) and timing differences (a refund issued after a payout window closed). Each one is opened with the records involved, the size of the difference and the evidence behind it.",
   },
   {
-    q: "Is my financial data safe?",
-    a: "All connections use official, read-only APIs — TrueNett can never move money, issue refunds, or modify anything in your accounts. Data is encrypted in transit and at rest, and we never sell or share your data. You can disconnect a platform and delete your data at any time.",
+    q: "Does TrueNett tell me the cause of a difference?",
+    a: "It will suggest one, labelled as a hypothesis, along with the check that would confirm it. An $8.00 gap next to a bank line described as a wire fee is a strong hypothesis, not a fact — and TrueNett is designed to say which it is. Once you confirm a cause, the aim is for the same pattern to be recognised next time.",
   },
   {
-    q: "Do you need my bank login?",
-    a: "No. TrueNett connects to payment platforms via their official APIs (OAuth or restricted API keys). Bank connections are a future, strictly optional feature — and when they arrive they'll use a regulated aggregator with read-only access, never your raw credentials.",
+    q: "Is this bookkeeping software or an accounting system?",
+    a: "No. TrueNett does not keep your books, file anything, or replace your ledger or your accountant. It sits between the systems you already use and answers one question: do these records agree, and if not, exactly where and why. The reconciliation summary is something you hand to whoever does keep the books.",
   },
   {
-    q: "How long does setup take?",
-    a: "About two minutes per platform. You authorize the connection, TrueNett imports your history (up to several years where the platform allows), and your dashboard fills in on its own. There's no chart of accounts to configure and no bookkeeping knowledge required.",
+    q: "Is it a Stripe dashboard, a profit calculator or a tax tool?",
+    a: "None of those. Earlier versions of this page talked about net income, tax estimates and financial health scores — that is not what we are building. TrueNett does not calculate your profit, estimate your tax or score your finances. Stripe is the first integration we intend to build because it is where our early partners' records start, not because the product is about Stripe.",
   },
   {
-    q: "Can I track my business expenses too?",
-    a: "Yes. Recurring costs like software subscriptions, contractors, and advertising can be added manually or imported, then categorized once — TrueNett remembers the category and deducts them from your net automatically going forward.",
+    q: "Which systems will it connect to?",
+    a: "The plan is three kinds of source from the start: payments (Stripe first, then PayPal, with Paddle and Lemon Squeezy later), banking (statement import first, then feeds) and accounting (Xero and ledger import first, QuickBooks later). Nothing on that list is connected yet, and design partners influence the order.",
   },
   {
-    q: "I run more than one business. Can I keep them separate?",
-    a: "Yes. Workspaces let you keep each business (or each client, if you're an agency) fully separate, each with its own connections, expenses, and reports — and you can still see a combined view across all of them.",
+    q: "How will my financial data be handled?",
+    a: "The design intent is read-only access for every integration — reconciliation needs to read records, never to move money or write back to your ledger — with encryption in transit and at rest, and deletion on request. Because no integration exists yet, please treat that as the commitment we are building to rather than a claim you can verify today. We will show you the exact scopes before you ever grant access.",
   },
   {
-    q: "Can I export my data?",
-    a: "Always. Every report and the underlying transaction data can be exported to CSV at any time — for your accountant, your co-founder, or your own spreadsheets. Your data is yours; there's no lock-in.",
+    q: "What does it cost?",
+    a: "There is no price yet, and no plan to announce one before the product reliably works. We are not taking payment, card details or deposits. Pricing will be set with the design partners who helped shape the product and announced to them first.",
   },
   {
-    q: "What does TrueNett cost?",
-    a: "One plan: $15/month, everything included — unlimited platform connections, all features, no per-platform surcharges, cancel anytime. Early-access members lock in this founding price permanently, even as the public price rises later.",
-  },
-  {
-    q: "Why should I pay for this when platforms show dashboards for free?",
-    a: "Because free dashboards show the number that makes the platform look good — gross revenue. If you've ever been surprised by a tax bill, discovered a subscription you forgot to cancel, or realized a 'great month' was actually break-even, the visibility pays for itself many times over. Most users find recoverable leaks worth far more than $15 in the first month.",
-  },
-  {
-    q: "What happens after I join the waitlist?",
-    a: "We onboard in small batches so every early user gets real attention. You'll get an email when your spot opens, a guided two-minute setup, and a direct line to the founders for feedback and requests. No credit card is required to join the list.",
+    q: "What happens after I apply?",
+    a: "You give us your email address — that is all the form collects. We reply with a few questions about which systems your records live in and how your close works today, and if it looks like a fit we set up a 30-minute conversation. No credit card, no credentials, and no automatic onboarding into something that isn't ready.",
   },
 ];

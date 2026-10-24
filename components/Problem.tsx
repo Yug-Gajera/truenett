@@ -1,13 +1,31 @@
 import Reveal from "./Reveal";
-import Counter from "./Counter";
 import SectionHeading from "./SectionHeading";
 
-const deductions = [
-  { label: "Platform & processor fees", amount: "−$5,400", pct: 14 },
-  { label: "Refunds & chargebacks", amount: "−$4,200", pct: 11 },
-  { label: "Currency conversion loss", amount: "−$1,800", pct: 5 },
-  { label: "Software & subscriptions", amount: "−$3,600", pct: 9 },
-  { label: "Estimated taxes", amount: "−$24,000", pct: 61 },
+/** One payout, decomposed into the records that have to agree with it. */
+const records = [
+  {
+    source: "Payment platform",
+    items: [
+      ["412 charges", "$21,860.00", "what customers were billed"],
+      ["Processing fees", "−$687.38", "deducted per charge, not per payout"],
+      ["3 refunds", "−$1,210.00", "two for charges from last month"],
+      ["Payout po_1Qm4kR", "$18,204.62", "one transfer covering all of the above"],
+    ],
+  },
+  {
+    source: "Bank",
+    items: [
+      ["ACH credit · Oct 20", "$18,204.62", "one line, no breakdown"],
+    ],
+  },
+  {
+    source: "Accounting",
+    items: [
+      ["Invoices raised", "$21,860.00", "issued before the money moved"],
+      ["Credit notes", "−$1,210.00", "one still missing on Oct 23"],
+      ["Fee expense", "−$687.38", "needs the payout to be itemized"],
+    ],
+  },
 ];
 
 export default function Problem() {
@@ -15,74 +33,55 @@ export default function Problem() {
     <section id="problem" className="line border-t py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="The problem"
+          eyebrow="Why this is hard"
           title={
             <>
-              Your revenue number is a <span className="accent-serif">headline</span>. It's
-              not the story.
+              One payout is already <span className="accent-serif">eight</span> records in
+              three systems.
             </>
           }
-          lede="Every platform leads with gross revenue — the number before their cut, before refunds, before taxes. It's the number that makes them look good, not the one that pays your rent. Here's what a “$120K year” actually looks like."
+          lede="A single bank deposit is the net of hundreds of charges, the fees taken out of them, and refunds that may belong to a different month entirely. Your accounting ledger holds a third version of the same events. Reconciliation is the work of proving those three stories are the same story — and most teams do it by hand, in a spreadsheet, once a month."
         />
 
-        <div className="mt-16 grid items-stretch gap-6 lg:grid-cols-2">
-          {/* What the dashboard says */}
-          <Reveal className="line flex flex-col rounded-2xl border bg-panel p-8">
-            <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-fg-dim">
-              What Stripe tells you
-            </p>
-            <div className="flex flex-1 flex-col items-start justify-center py-10">
-              <p className="tnum text-5xl font-semibold tracking-tight text-fg sm:text-6xl">
-                $120,000
+        <div className="mt-16 grid gap-4 lg:grid-cols-3">
+          {records.map((group, gi) => (
+            <Reveal
+              key={group.source}
+              delay={gi * 0.08}
+              className="line flex flex-col rounded-2xl border bg-panel p-6"
+            >
+              <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-fg-dim">
+                {group.source}
               </p>
-              <p className="mt-3 text-sm text-fg-dim">Gross volume · Looks like a great year</p>
-            </div>
-            <p className="line border-t pt-5 text-sm leading-relaxed text-fg-dim">
-              This is the number you screenshot, celebrate, and plan your life around. It is
-              also a number you will never receive.
-            </p>
-          </Reveal>
-
-          {/* What actually happened */}
-          <Reveal delay={0.1} className="line rounded-2xl border bg-panel p-8">
-            <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-brand-400">
-              What TrueNett tells you
-            </p>
-            <dl className="tnum mt-6 space-y-4 text-sm">
-              <div className="flex items-baseline justify-between">
-                <dt className="text-fg-mid">Gross revenue</dt>
-                <dd className="font-medium text-fg">$120,000</dd>
-              </div>
-              {deductions.map((d, i) => (
-                <div key={d.label}>
-                  <div className="flex items-baseline justify-between">
-                    <dt className="text-fg-dim">{d.label}</dt>
-                    <dd className="text-loss">{d.amount}</dd>
+              <dl className="tnum mt-6 flex-1 space-y-4 text-sm">
+                {group.items.map(([label, amount, note]) => (
+                  <div key={label}>
+                    <div className="flex items-baseline justify-between gap-3">
+                      <dt className="text-fg-mid">{label}</dt>
+                      <dd
+                        className={
+                          amount.startsWith("−") ? "shrink-0 text-loss" : "shrink-0 text-fg"
+                        }
+                      >
+                        {amount}
+                      </dd>
+                    </div>
+                    <p className="mt-1 text-[12px] leading-snug text-fg-dim">{note}</p>
                   </div>
-                  <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/5">
-                    <div
-                      className="leak-bar h-full rounded-full bg-loss/60"
-                      style={{ width: `${d.pct}%`, "--d": `${0.15 + i * 0.12}s` } as React.CSSProperties}
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="line flex items-baseline justify-between border-t pt-4">
-                <dt className="flex items-center gap-2 font-medium text-fg">
-                  <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
-                  What actually landed
-                </dt>
-                <dd className="text-2xl font-semibold text-brand-400">
-                  <Counter value={81000} prefix="$" />
-                </dd>
-              </div>
-            </dl>
-            <p className="mt-5 text-sm leading-relaxed text-fg-dim">
-              $39,000 — nearly a third — never reached you. Most people find out in April,
-              from their accountant. TrueNett shows you in real time, all year.
-            </p>
-          </Reveal>
+                ))}
+              </dl>
+            </Reveal>
+          ))}
         </div>
+
+        <Reveal delay={0.1} className="mx-auto mt-10 max-w-3xl text-center">
+          <p className="text-base leading-relaxed text-fg-mid">
+            Reconciling inside one platform is the easy half — the platform knows its own
+            fees. The hard half is between systems, where a refund can land in the wrong
+            month, a wire fee can shave $8 off a deposit with no line item anywhere, and the
+            same payment can exist three times under three different identifiers.
+          </p>
+        </Reveal>
       </div>
     </section>
   );

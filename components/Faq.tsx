@@ -16,7 +16,7 @@ export default function Faq() {
         <SectionHeading
           align="center"
           eyebrow="FAQ"
-          title="Fair questions, straight answers."
+          title="Fair questions, including the awkward ones."
           lede={
             <>
               Anything else? Email{" "}

@@ -89,7 +89,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
     }
 
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      setError("Signups aren't open just yet. Please try again soon.");
+      setError("Applications aren't open just yet. Please try again soon.");
       return;
     }
 
@@ -157,10 +157,12 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
                     <path d="M2.5 8.5l3.5 3.5 7.5-8" />
                   </svg>
                 </div>
-                <h2 className="mt-5 text-lg font-semibold tracking-tight">You're on the list</h2>
+                <h2 className="mt-5 text-lg font-semibold tracking-tight">
+                  Got it — we'll be in touch
+                </h2>
                 <p className="mt-2 text-sm leading-relaxed text-fg-mid">
-                  Thanks for your interest in TrueNett. We'll email you as soon as your
-                  early-access spot is ready.
+                  We read every application ourselves. Expect a short email asking which
+                  systems your records live in and how you reconcile today.
                 </p>
                 <button
                   onClick={() => close("button")}
@@ -172,11 +174,12 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
             ) : (
               <>
                 <h2 id="waitlist-title" className="text-lg font-semibold tracking-tight">
-                  Join the waitlist
+                  Apply as a design partner
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-fg-mid">
-                  Drop your email and we'll reach out when your spot opens up. Founding-member
-                  pricing is locked in for everyone on the list.
+                  Your email is all we need to start. We'll reply with a few questions about
+                  your stack and how you close the month — nothing to connect, no payment
+                  details.
                 </p>
 
                 <form onSubmit={onSubmit} className="mt-6 space-y-3" noValidate>
@@ -211,11 +214,11 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
                     disabled={status === "submitting"}
                     className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fg px-6 text-sm font-medium text-base transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {status === "submitting" ? "Submitting…" : "Join waitlist"}
+                    {status === "submitting" ? "Submitting…" : "Apply"}
                   </button>
                 </form>
                 <p className="mt-4 text-center text-[13px] text-fg-dim">
-                  We'll only use your email to send your invite.
+                  We'll only use your email to talk to you about TrueNett.
                 </p>
               </>
             )}

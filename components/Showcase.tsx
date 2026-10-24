@@ -4,144 +4,147 @@ import SectionHeading from "./SectionHeading";
 const callouts = [
   {
     n: 1,
-    title: "The waterfall",
-    body: "Watch gross become net, deduction by deduction. This is the chart your spreadsheet was always trying to be.",
+    title: "The difference, stated plainly",
+    body: "What the two records say, what they should say, and how far apart they are — before any interpretation is offered.",
   },
   {
     n: 2,
-    title: "Every deduction, itemized",
-    body: "Fees, refunds, FX and taxes matched to real transactions — click any line to see exactly which sales it came from.",
+    title: "Evidence, with its source",
+    body: "Every fact used to open the exception is listed with where it came from and when it was observed, so the reasoning can be checked rather than trusted.",
   },
   {
     n: 3,
-    title: "Alerts that earn their keep",
-    body: "TrueNett flags anomalies — a refund spike, fee creep, a margin dropping on one platform — before they cost you a quarter.",
+    title: "A hypothesis, labelled as one",
+    body: "TrueNett will suggest the likely cause and the check that would prove it. Until that check passes, it stays an unverified hypothesis — never a conclusion.",
   },
 ];
 
-// Waterfall bars: [label, xStart%, width%, kind]
-const bars = [
-  { label: "Gross", x: 0, w: 100, kind: "gross" },
-  { label: "Fees", x: 88, w: 12, kind: "loss" },
-  { label: "Refunds", x: 80, w: 8, kind: "loss" },
-  { label: "FX", x: 77, w: 3, kind: "loss" },
-  { label: "Expenses", x: 68, w: 9, kind: "loss" },
-  { label: "Taxes", x: 50, w: 18, kind: "loss" },
-  { label: "True net", x: 0, w: 50, kind: "net" },
-] as const;
-
-function Hotspot({ n, className }: { n: number; className: string }) {
-  return (
-    <span
-      className={`hotspot absolute z-10 flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 text-[12px] font-semibold text-base ${className}`}
-      aria-hidden="true"
-    >
-      {n}
-    </span>
-  );
-}
+const evidence = [
+  ["Payout report · payment platform", "po_1Qk2vB total $12,004.19", "Oct 14, 02:11 UTC"],
+  ["Bank feed · Mercury ••4417", "ACH credit $11,996.19", "Oct 14, 16:40 UTC"],
+  ["Bank feed · description", "“WIRE FEE” on the same statement day", "Oct 14, 16:40 UTC"],
+  ["Accounting ledger", "No bank-fee entry for October", "Oct 23, 09:02 UTC"],
+];
 
 export default function Showcase() {
   return (
-    <section className="line overflow-hidden border-t bg-panel/40 py-24 sm:py-32">
+    <section
+      id="exceptions"
+      className="line overflow-hidden border-t py-24 sm:py-32"
+    >
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Inside the product"
+          eyebrow="Inside an exception"
           title={
             <>
-              Your monthly P&L, readable in <span className="accent-serif">ten seconds</span>.
+              Not “something is off”. The{" "}
+              <span className="accent-serif">records</span>, the evidence, and what to check
+              next.
             </>
           }
-          lede="This is the view our early users keep open in a pinned tab: gross at the top, true net at the bottom, and every dollar in between accounted for."
+          lede="An exception is only useful if it can be resolved by someone who did not find it. Each one carries the two sides of the difference, the evidence behind it, and an explicit line between what is confirmed and what is still a guess."
         />
 
-        <div className="mt-16 grid items-center gap-10 lg:grid-cols-[1.6fr_1fr]">
-          {/* Annotated statement mock */}
+        <div className="mt-16 grid items-start gap-10 lg:grid-cols-[1.6fr_1fr]">
           <Reveal className="relative">
             <div className="line relative rounded-2xl border bg-panel p-6 shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_40px_120px_-30px_rgba(0,0,0,0.9)] sm:p-8">
-              <div className="flex items-baseline justify-between">
-                <p className="text-sm font-medium text-fg">June statement</p>
-                <p className="text-[12px] text-fg-dim">All platforms · USD</p>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="text-sm font-medium text-fg">
+                  EXC-104 · Deposit smaller than payout
+                </p>
+                <span className="rounded-full bg-loss/12 px-2.5 py-0.5 text-[11px] font-medium text-loss">
+                  Exception · open
+                </span>
               </div>
 
-              {/* Waterfall */}
-              <div className="relative mt-6">
-                <Hotspot n={1} className="-left-3 -top-3" />
-                <div className="tnum space-y-2">
-                  {bars.map((b) => (
-                    <div key={b.label} className="flex items-center gap-3 text-[11px]">
-                      <span className="w-16 shrink-0 text-fg-dim">{b.label}</span>
-                      <div className="relative h-4 flex-1">
-                        <span
-                          className={`absolute top-0 h-full rounded-sm ${
-                            b.kind === "gross"
-                              ? "bg-white/15"
-                              : b.kind === "net"
-                                ? "bg-brand-500/80"
-                                : "bg-loss/50"
-                          }`}
-                          style={{ left: `${b.x}%`, width: `${b.w}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Itemized deductions */}
-              <div className="line relative mt-7 rounded-xl border bg-panel-2 p-4">
-                <Hotspot n={2} className="-right-2.5 -top-2.5" />
-                <dl className="tnum space-y-2.5 text-[12px]">
-                  <div className="flex justify-between">
-                    <dt className="text-fg-dim">Stripe processing fees · 214 txns</dt>
-                    <dd className="text-loss">−$1,644.83</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-fg-dim">Gumroad platform fee · 96 sales</dt>
-                    <dd className="text-loss">−$920.40</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-fg-dim">Refunds · 11 orders</dt>
-                    <dd className="text-loss">−$912.00</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-fg-dim">EUR→USD conversion · 4 payouts</dt>
-                    <dd className="text-loss">−$186.22</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-fg-dim">Estimated tax reserve · 28%</dt>
-                    <dd className="text-loss">−$3,412.19</dd>
-                  </div>
-                </dl>
-              </div>
-
-              {/* Alert */}
-              <div className="relative mt-4 flex items-start gap-3 rounded-xl border border-amber-400/25 bg-amber-400/[0.06] p-4">
-                <Hotspot n={3} className="-left-2.5 -top-2.5" />
-                <svg
-                  className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
+              {/* The two sides */}
+              <div className="relative mt-6 grid gap-3 sm:grid-cols-2">
+                <span
+                  className="hotspot absolute -left-3 -top-3 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 text-[12px] font-semibold text-base"
+                  aria-hidden="true"
                 >
-                  <path d="M8 1.5 15 14H1L8 1.5z" strokeLinejoin="round" />
-                  <path d="M8 6v4" strokeLinecap="round" />
-                  <circle cx="8" cy="12" r="0.5" fill="currentColor" />
-                </svg>
-                <div>
-                  <p className="text-[12px] font-medium text-amber-200">
-                    Refund rate on Gumroad is up 2.1% this month
+                  1
+                </span>
+                <div className="line rounded-xl border bg-panel-2 p-4">
+                  <p className="text-[11px] text-fg-dim">Payment platform</p>
+                  <p className="tnum mt-1 text-xl font-semibold text-fg">$12,004.19</p>
+                  <p className="mt-1 text-[11px] text-fg-dim">
+                    Payout po_1Qk2vB · 287 charges, 2 refunds
                   </p>
-                  <p className="mt-0.5 text-[11px] text-fg-dim">
-                    Mostly on “Preset Pack Vol. 3” — 8 of 11 refunds. Worth a look.
+                </div>
+                <div className="line rounded-xl border bg-panel-2 p-4">
+                  <p className="text-[11px] text-fg-dim">Bank</p>
+                  <p className="tnum mt-1 text-xl font-semibold text-fg">$11,996.19</p>
+                  <p className="mt-1 text-[11px] text-fg-dim">
+                    ACH credit · Mercury ••4417 · Oct 14
                   </p>
                 </div>
               </div>
+              <p className="tnum mt-3 text-[12px] text-loss">
+                Difference −$8.00 · 0.07% of the payout
+              </p>
+
+              {/* Evidence */}
+              <div className="line relative mt-7 rounded-xl border bg-panel-2 p-4">
+                <span
+                  className="hotspot absolute -right-2.5 -top-2.5 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 text-[12px] font-semibold text-base"
+                  aria-hidden="true"
+                >
+                  2
+                </span>
+                <p className="text-[11px] font-medium text-fg-mid">Evidence collected</p>
+                <ul className="mt-3 space-y-2.5">
+                  {evidence.map(([source, fact, seen]) => (
+                    <li key={source} className="flex flex-wrap items-baseline gap-x-2 text-[11px]">
+                      <span className="text-fg-dim">{source}</span>
+                      <span className="font-medium text-fg-mid">{fact}</span>
+                      <span className="tnum ml-auto text-fg-faint">{seen}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Hypothesis vs confirmed */}
+              <div className="relative mt-4 grid gap-3 sm:grid-cols-2">
+                <span
+                  className="hotspot absolute -left-2.5 -top-2.5 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 text-[12px] font-semibold text-base"
+                  aria-hidden="true"
+                >
+                  3
+                </span>
+                <div className="rounded-xl border border-warn/25 bg-warn/[0.05] p-4">
+                  <p className="text-[11px] font-medium text-warn">Unverified hypothesis</p>
+                  <p className="mt-1.5 text-[12px] leading-relaxed text-fg-mid">
+                    An $8.00 incoming-wire fee was deducted by the bank and is not itemized
+                    in the feed.
+                  </p>
+                  <p className="mt-2.5 text-[11px] leading-relaxed text-fg-dim">
+                    Checks that would confirm it: the statement PDF for Oct 14, or the fee
+                    schedule for incoming ACH. Confirm once and TrueNett recognises the
+                    pattern next time.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-brand-500/25 bg-brand-500/[0.05] p-4">
+                  <p className="text-[11px] font-medium text-brand-300">
+                    Confirmed cause · EXC-098
+                  </p>
+                  <p className="mt-1.5 text-[12px] leading-relaxed text-fg-mid">
+                    A $340.00 refund was issued after the payout window closed, so it reduces
+                    the next payout instead of this one.
+                  </p>
+                  <p className="mt-2.5 text-[11px] leading-relaxed text-fg-dim">
+                    Timing difference, not a loss. Evidence: refund created Sep 30, 18:42
+                    UTC; payout window closed Sep 30, 00:00 UTC.
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-5 text-[11px] text-fg-faint">
+                Illustrative exception and data — not a live account.
+              </p>
             </div>
           </Reveal>
 
-          {/* Callouts */}
           <div className="space-y-8">
             {callouts.map((c, i) => (
               <Reveal key={c.n} delay={i * 0.08} className="flex gap-4">

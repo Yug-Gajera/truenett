@@ -3,77 +3,47 @@ import SectionHeading from "./SectionHeading";
 
 const personas = [
   {
-    who: "YouTubers",
-    pain: "AdSense, sponsorships, memberships and merch all pay differently.",
-    gain: "One net figure across every income stream — and which ones actually carry the channel.",
+    who: "SaaS founders",
+    pain: "Subscription revenue in Stripe, a bank account that disagrees with it, and a bookkeeper who asks about a $40 difference you can't explain.",
+    gain: "Know that the month ties out — and which three records don't — without becoming the person who reconciles it by hand.",
   },
   {
-    who: "Freelancers",
-    pain: "PayPal fees, Wise transfers, late invoices and quarterly-tax guesswork.",
-    gain: "What each client is really worth after fees and FX, plus a running tax reserve.",
+    who: "Lean finance teams",
+    pain: "One or two people closing the month across a processor, two bank accounts and the ledger, in a spreadsheet nobody else can safely touch.",
+    gain: "The matching already done when close starts, with the evidence attached, so the work left is judgement rather than data entry.",
   },
   {
-    who: "Agencies",
-    pain: "Retainers in, contractor payouts and software costs right back out.",
-    gain: "True margin per client — so you can fire the ones quietly losing you money.",
-  },
-  {
-    who: "Indie hackers",
-    pain: "Stripe MRR looks great; hosting, APIs and churn tell another story.",
-    gain: "Real profit per product, not vanity MRR. Know when you can go full-time.",
-  },
-  {
-    who: "Course creators",
-    pain: "Gumroad's 10%, refund windows, and affiliate cuts eat launches.",
-    gain: "Launch post-mortems with true net per product — and refund patterns to fix.",
-  },
-  {
-    who: "Shopify stores",
-    pain: "Revenue is easy. Profit after fees, apps, shipping and ads is a mystery.",
-    gain: "Contribution margin per month without a 40-tab spreadsheet.",
-  },
-  {
-    who: "Consultants",
-    pain: "Multiple currencies, wire fees, and expenses scattered across cards.",
-    gain: "A clean per-engagement P&L you can glance at between calls.",
-  },
-  {
-    who: "Newsletter writers",
-    pain: "Paid subs on one platform, sponsors on another, referrals on a third.",
-    gain: "Total take-home per issue and per sponsor — instantly.",
-  },
-  {
-    who: "Coaches",
-    pain: "Session payments, program sales and payment plans across processors.",
-    gain: "Which offers are profitable after refunds and fees — not just popular.",
+    who: "Fractional CFOs and bookkeepers",
+    pain: "Several clients, each with a different stack, each needing the same payout-to-deposit work rebuilt from scratch every month.",
+    gain: "The same reconciliation state per client, so a close is reviewed rather than reconstructed.",
   },
 ];
 
 export default function Personas() {
   return (
-    <section className="line border-t bg-panel/40 py-24 sm:py-32">
+    <section id="who" className="line border-t py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Who it's for"
+          eyebrow="Who we're building with"
           title={
             <>
-              If you get paid by a platform, the platform is{" "}
-              <span className="accent-serif">rounding up</span> on your behalf.
+              Start with SaaS, because the{" "}
+              <span className="accent-serif">records</span> are hardest there.
             </>
           }
-          lede="TrueNett is built for anyone whose income arrives through processors and marketplaces — which, in 2026, is almost everyone working for themselves."
+          lede="Subscriptions, proration, failed payments, mid-cycle refunds and payouts that bundle hundreds of charges make SaaS a demanding first case. The architecture is multi-platform by design — payments, banking and accounting as separate kinds of source — so what works here extends outward rather than being rebuilt."
         />
 
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-4 lg:grid-cols-3">
           {personas.map((p, i) => (
             <Reveal
               key={p.who}
-              delay={(i % 3) * 0.06}
+              delay={i * 0.07}
               className="line rounded-2xl border bg-panel p-6 transition-colors duration-300 hover:border-white/16"
             >
               <h3 className="text-[15px] font-semibold text-fg">{p.who}</h3>
               <p className="mt-3 text-sm leading-relaxed text-fg-dim">{p.pain}</p>
-              <p className="mt-3 flex gap-2 text-sm leading-relaxed text-fg-mid">
+              <p className="mt-4 flex gap-2 text-sm leading-relaxed text-fg-mid">
                 <svg
                   className="mt-1 h-3.5 w-3.5 shrink-0 text-brand-400"
                   viewBox="0 0 16 16"
