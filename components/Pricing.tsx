@@ -116,10 +116,10 @@ export default function Pricing() {
               </ul>
 
               <CtaButton location="pricing" variant="brand" size="lg" className="mt-8 w-full">
-                Apply as a design partner
+                Join early access
               </CtaButton>
               <p className="mt-4 text-center text-[13px] text-fg-dim">
-                Email only to apply. We reply with a few questions about your stack — no
+                Email only to join. We reply with a few questions about your stack — no
                 payment details, ever.
               </p>
             </div>

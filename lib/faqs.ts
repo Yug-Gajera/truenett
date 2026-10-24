@@ -56,7 +56,7 @@ export const faqs: { q: string; a: string }[] = [
     a: "There is no price yet, and no plan to announce one before the product reliably works. We are not taking payment, card details or deposits. Pricing will be set with the design partners who helped shape the product and announced to them first.",
   },
   {
-    q: "What happens after I apply?",
+    q: "What happens after I join?",
     a: "You give us your email address — that is all the form collects. We reply with a few questions about which systems your records live in and how your close works today, and if it looks like a fit we set up a 30-minute conversation. No credit card, no credentials, and no automatic onboarding into something that isn't ready.",
   },
 ];

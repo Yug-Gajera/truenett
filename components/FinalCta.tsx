@@ -29,7 +29,7 @@ export default function FinalCta() {
         <Reveal delay={0.15}>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <CtaButton location="closing" variant="brand" size="lg">
-              Apply as a design partner
+              Join early access
             </CtaButton>
             <a
               href="mailto:hello@truenett.com?subject=Reconciliation%20%E2%80%94%20my%20stack&body=Which%20systems%20my%20records%20live%20in%3A%0A%0AHow%20I%20reconcile%20today%3A%0A%0AWhere%20it%20breaks%3A%0A"

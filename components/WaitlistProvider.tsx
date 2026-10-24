@@ -89,7 +89,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
     }
 
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      setError("Applications aren't open just yet. Please try again soon.");
+      setError("Early access isn't open just yet. Please try again soon.");
       return;
     }
 
@@ -161,7 +161,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
                   Got it — we'll be in touch
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-fg-mid">
-                  We read every application ourselves. Expect a short email asking which
+                  We read every request ourselves. Expect a short email asking which
                   systems your records live in and how you reconcile today.
                 </p>
                 <button
@@ -174,7 +174,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
             ) : (
               <>
                 <h2 id="waitlist-title" className="text-lg font-semibold tracking-tight">
-                  Apply as a design partner
+                  Join early access
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-fg-mid">
                   Your email is all we need to start. We'll reply with a few questions about
@@ -214,7 +214,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
                     disabled={status === "submitting"}
                     className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fg px-6 text-sm font-medium text-base transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {status === "submitting" ? "Submitting…" : "Apply"}
+                    {status === "submitting" ? "Submitting…" : "Join"}
                   </button>
                 </form>
                 <p className="mt-4 text-center text-[13px] text-fg-dim">
